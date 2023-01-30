@@ -1,24 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import { onAuthStateChanged } from "firebase/auth";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { auth } from "./firebase/config";
+import ChatRoom from "./pages/chat_room";
+import Login from "./pages/login";
+import { handleAuthStateChanged } from "./redux/actions/authAction";
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const unsubcribed = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const { displayName, email, uid, photoURL } = user;
+        dispatch(handleAuthStateChanged({ displayName, email, uid, photoURL }));
+      }
+    });
+
+    return () => {
+      unsubcribed();
+    };
+  }, [dispatch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<ChatRoom />} />
+      </Routes>
+    </Router>
   );
 }
 
