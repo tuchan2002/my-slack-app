@@ -6,7 +6,6 @@ import Typography from "@mui/material/Typography";
 import { Button } from "@mui/material";
 import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
 import GoogleIcon from "@mui/icons-material/Google";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { auth } from "../../firebase/config";
 import {
@@ -19,14 +18,6 @@ const facebookProvider = new FacebookAuthProvider();
 const googleProvider = new GoogleAuthProvider();
 const Login = () => {
   const { authReducer } = useSelector((state) => state);
-
-  const navigate = useNavigate();
-
-  React.useEffect(() => {
-    if (authReducer.user) {
-      navigate("/");
-    }
-  }, [authReducer.user, navigate]);
 
   const handleLoginWithFacebook = () => {
     signInWithPopup(auth, facebookProvider);
@@ -48,7 +39,7 @@ const Login = () => {
         <LockOutlinedIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
-        Log in
+        Login
       </Typography>
       <Button
         startIcon={<FacebookRoundedIcon />}
