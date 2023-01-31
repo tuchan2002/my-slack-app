@@ -6,7 +6,7 @@ const SidebarTop = () => {
   return (
     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <Avatar alt="avatar" src="/static/images/avatar/1.jpg" />
+        <Avatar alt="" src="" />
         <Typography>Tran Anh Tu</Typography>
       </Box>
       <Button endIcon={<LogoutIcon />} variant="outlined">
