@@ -12,15 +12,6 @@ const SidebarTop = () => {
 
   const { displayName, photoURL } = authReducer.user;
 
-  // useEffect(() => {
-  //   onSnapshot(collection(db, "users"), (snapshot) => {
-  //     const data = snapshot.docs.map((doc) => ({
-  //       ...doc.data(),
-  //       id: doc.id,
-  //     }));
-  //   });
-  // }, []);
-
   const handleLogout = () => {
     dispatch(logout());
   };

@@ -16,6 +16,7 @@ const ChatHeader = () => {
         p: 2,
         display: "flex",
         justifyContent: "space-between",
+        borderBottom: "1px solid #ddd",
       }}
     >
       <Box>

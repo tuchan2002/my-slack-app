@@ -12,7 +12,7 @@ const Sidebar = () => {
         height: "100vh",
         display: "flex",
         flexDirection: "column",
-        gap: 2,
+        gap: 3,
       }}
     >
       <SidebarTop />
