@@ -1,8 +1,30 @@
 import { Avatar, Box, Button, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/actions/authAction";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase/config";
 
 const SidebarTop = () => {
+  const { authReducer } = useSelector((state) => state);
+  const dispatch = useDispatch();
+
+  const { displayName, photoURL } = authReducer.user;
+
+  // useEffect(() => {
+  //   onSnapshot(collection(db, "users"), (snapshot) => {
+  //     const data = snapshot.docs.map((doc) => ({
+  //       ...doc.data(),
+  //       id: doc.id,
+  //     }));
+  //   });
+  // }, []);
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <Box
       sx={{
@@ -12,10 +34,14 @@ const SidebarTop = () => {
       }}
     >
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <Avatar alt="" src="" />
-        <Typography>Tran Anh Tu</Typography>
+        <Avatar alt="" src={photoURL ? photoURL : ""} />
+        <Typography>{displayName}</Typography>
       </Box>
-      <Button endIcon={<LogoutIcon />} variant="outlined">
+      <Button
+        endIcon={<LogoutIcon />}
+        variant="outlined"
+        onClick={handleLogout}
+      >
         Logout
       </Button>
     </Box>

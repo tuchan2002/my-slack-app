@@ -6,25 +6,41 @@ import Typography from "@mui/material/Typography";
 import { Button } from "@mui/material";
 import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
 import GoogleIcon from "@mui/icons-material/Google";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { auth } from "../../firebase/config";
 import {
   signInWithPopup,
   GoogleAuthProvider,
   FacebookAuthProvider,
 } from "firebase/auth";
+import { addDocument } from "../../firebase/services";
 
 const facebookProvider = new FacebookAuthProvider();
 const googleProvider = new GoogleAuthProvider();
 const Login = () => {
   const { authReducer } = useSelector((state) => state);
 
-  const handleLoginWithFacebook = () => {
-    signInWithPopup(auth, facebookProvider);
+  const handleLoginWithFacebook = async () => {
+    const { _tokenResponse, user } = await signInWithPopup(
+      auth,
+      facebookProvider
+    );
+
+    if (_tokenResponse?.isNewUser) {
+      await addDocument("users", {
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        uid: user.uid,
+        providerId: _tokenResponse.providerId,
+      });
+    }
   };
+
   const handleLoginWithGoogle = () => {
     // signInWithPopup(auth, googleProvider);
   };
+
   return (
     <Box
       sx={{
