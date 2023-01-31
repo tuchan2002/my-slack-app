@@ -4,7 +4,13 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 const SidebarTop = () => {
   return (
-    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
       <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
         <Avatar alt="" src="" />
         <Typography>Tran Anh Tu</Typography>
