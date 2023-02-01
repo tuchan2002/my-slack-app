@@ -7,6 +7,7 @@ import {
   getRealtimeChannels,
   getRealtimeMemberInChannel,
 } from "../../redux/actions/channelAction";
+import { getRealtimeMessagesByChannel } from "../../redux/actions/messageAction";
 
 const Home = () => {
   const {

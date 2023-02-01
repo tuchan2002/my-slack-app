@@ -10,23 +10,25 @@ const ChatWindow = () => {
   } = useSelector((state) => state);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        height: "100vh",
-      }}
-    >
+    <>
       {selectedChannel ? (
-        <ChatHeader />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            height: "100vh",
+          }}
+        >
+          <ChatHeader />
+          <ChatMain />
+        </Box>
       ) : (
         <Alert severity="info" sx={{ pt: 2 }}>
           Please select a channel!
         </Alert>
       )}
-      <ChatMain />
-    </Box>
+    </>
   );
 };
 

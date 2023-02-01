@@ -1,7 +1,18 @@
 import { Avatar, Box, Typography } from "@mui/material";
 import React from "react";
+import moment from "moment";
 
-const Message = ({ text, displayName, createdAt, photoURL }) => {
+const formatDate = (seconds) => {
+  const messageMoment = moment.utc(seconds * 1000);
+  console.log(moment().diff(messageMoment));
+  if (moment().diff(messageMoment) < 60 * 60 * 1000) {
+    return messageMoment.fromNow();
+  } else {
+    return messageMoment.format("lll");
+  }
+};
+
+const Message = ({ content, displayName, createdAt, photoURL }) => {
   return (
     <Box
       sx={{
@@ -18,10 +29,10 @@ const Message = ({ text, displayName, createdAt, photoURL }) => {
             {displayName}
           </Typography>
           <Typography variant="body2" sx={{ fontSize: "12px" }}>
-            {createdAt}
+            {formatDate(createdAt)}
           </Typography>
         </Box>
-        <Typography>{text}</Typography>
+        <Typography>{content}</Typography>
       </Box>
     </Box>
   );

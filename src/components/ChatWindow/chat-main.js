@@ -1,32 +1,58 @@
 import { Box, Button, TextField } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addDocument } from "../../firebase/services";
+import { getRealtimeMessagesByChannel } from "../../redux/actions/messageAction";
 import Message from "../Message";
 
 const ChatMain = () => {
+  const {
+    authReducer: {
+      user: { uid, displayName, photoURL },
+    },
+    channelReducer: { selectedChannel },
+    messageReducer,
+  } = useSelector((state) => state);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = dispatch(
+      getRealtimeMessagesByChannel(selectedChannel?.id)
+    );
+
+    return unsubscribe;
+  }, [selectedChannel?.id]);
+
+  const [messageContent, setMessageContent] = useState("");
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    addDocument("messages", {
+      content: messageContent,
+      uid,
+      displayName,
+      photoURL,
+      channelId: selectedChannel.id,
+    });
+    setMessageContent("");
+  };
+
   return (
     <Box sx={{ p: 2 }}>
       <Box>
-        <Message
-          text="Hello World ! Hello World ! Hello World !"
-          displayName="Tran Tu"
-          createdAt="5:00 PM"
-          photoURL="https://i.pinimg.com/564x/0c/a0/e8/0ca0e824a87726971c6b140a10b735b1.jpg"
-        />
-        <Message
-          text="Hello World ! Hello World ! Hello World !"
-          displayName="Tran Tu"
-          createdAt="5:00 PM"
-          photoURL="https://i.pinimg.com/564x/0c/a0/e8/0ca0e824a87726971c6b140a10b735b1.jpg"
-        />
-        <Message
-          text="Hello World ! Hello World ! Hello World !"
-          displayName="Tran Tu"
-          createdAt="5:00 PM"
-          photoURL="https://i.pinimg.com/564x/0c/a0/e8/0ca0e824a87726971c6b140a10b735b1.jpg"
-        />
+        {messageReducer?.messages.map((message) => (
+          <Message
+            key={message.id}
+            content={message.content}
+            displayName={message.displayName}
+            photoURL={message.photoURL}
+            createdAt={message.createdAt?.seconds}
+          />
+        ))}
       </Box>
 
-      <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
+      <form onSubmit={handleOnSubmit} className="send-message-form">
         <TextField
           placeholder="Enter your message..."
           variant="outlined"
@@ -36,9 +62,13 @@ const ChatMain = () => {
             },
           }}
           fullWidth
+          value={messageContent}
+          onChange={(e) => setMessageContent(e.target.value)}
         />
-        <Button variant="contained">Send</Button>
-      </Box>
+        <Button variant="contained" onClick={handleOnSubmit}>
+          Send
+        </Button>
+      </form>
     </Box>
   );
 };
