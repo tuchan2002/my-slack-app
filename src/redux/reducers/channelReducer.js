@@ -1,8 +1,13 @@
-import { GET_REALTIME_CHANNELS, SELECT_CHANNEL } from "../types";
+import {
+  GET_REALTIME_CHANNELS,
+  GET_REALTIME_MEMBERS,
+  SELECT_CHANNEL,
+} from "../types";
 
 const initialState = {
   channels: [],
-  selectedChannel: null,
+  selectedChannel: {},
+  members: [],
 };
 
 const authReducer = (state = initialState, action) => {
@@ -18,6 +23,11 @@ const authReducer = (state = initialState, action) => {
         selectedChannel: state.channels.find(
           (channel) => channel.id === action.payload
         ),
+      };
+    case GET_REALTIME_MEMBERS:
+      return {
+        ...state,
+        members: action.payload,
       };
     default:
       return state;

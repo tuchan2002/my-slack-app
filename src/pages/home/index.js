@@ -3,13 +3,17 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ChatWindow from "../../components/ChatWindow";
 import Sidebar from "../../components/Sidebar";
-import { getRealtimeChannels } from "../../redux/actions/channelAction";
+import {
+  getRealtimeChannels,
+  getRealtimeMemberInChannel,
+} from "../../redux/actions/channelAction";
 
 const Home = () => {
   const {
     authReducer: {
       user: { uid },
     },
+    channelReducer: { selectedChannel },
   } = useSelector((state) => state);
 
   const dispatch = useDispatch();
@@ -19,6 +23,14 @@ const Home = () => {
 
     return unsubscribe;
   }, [uid]);
+
+  useEffect(() => {
+    const unsubscribe = dispatch(
+      getRealtimeMemberInChannel(selectedChannel?.members || [""])
+    );
+
+    return unsubscribe;
+  }, [selectedChannel?.members]);
 
   return (
     <Grid container>

@@ -1,6 +1,10 @@
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../firebase/config";
-import { GET_REALTIME_CHANNELS, SELECT_CHANNEL } from "../types";
+import {
+  GET_REALTIME_CHANNELS,
+  GET_REALTIME_MEMBERS,
+  SELECT_CHANNEL,
+} from "../types";
 
 export const getRealtimeChannels = (data) => (dispatch) => {
   const q = query(
@@ -28,4 +32,23 @@ export const selectChannel = (data) => (dispatch) => {
     type: SELECT_CHANNEL,
     payload: data,
   });
+};
+
+export const getRealtimeMemberInChannel = (data) => (dispatch) => {
+  console.log(data);
+  const q = query(collection(db, "users"), where("uid", "in", data));
+
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    const documents = snapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    dispatch({
+      type: GET_REALTIME_MEMBERS,
+      payload: documents,
+    });
+  });
+
+  return unsubscribe;
 };

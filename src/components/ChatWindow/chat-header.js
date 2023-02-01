@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 
 const ChatHeader = () => {
   const {
-    channelReducer: { selectedChannel },
+    channelReducer: { selectedChannel, members },
   } = useSelector((state) => state);
 
   return (
@@ -34,22 +34,15 @@ const ChatHeader = () => {
           <PersonAddAlt1Icon />
         </IconButton>
 
-        <AvatarGroup max={3}>
-          <Tooltip title="Remy Sharp">
-            <Avatar alt="Remy Sharp" src="" />
-          </Tooltip>
-          <Tooltip title="Remy Sharp">
-            <Avatar alt="Remy Sharp" src="" />
-          </Tooltip>
-          <Tooltip title="Remy Sharp">
-            <Avatar alt="Remy Sharp" src="" />
-          </Tooltip>
-          <Tooltip title="Remy Sharp">
-            <Avatar alt="Remy Sharp" src="" />
-          </Tooltip>
-          <Tooltip title="Remy Sharp">
-            <Avatar alt="Remy Sharp" src="" />
-          </Tooltip>
+        <AvatarGroup max={4}>
+          {members?.map((member) => (
+            <Tooltip title={member.name} key={member.uid}>
+              <Avatar
+                alt={member.name}
+                src={member.photoURL ? member.photoURL : ""}
+              />
+            </Tooltip>
+          ))}
         </AvatarGroup>
       </Box>
     </Box>

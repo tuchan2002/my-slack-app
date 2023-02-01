@@ -19,7 +19,6 @@ import { useDispatch, useSelector } from "react-redux";
 import TagIcon from "@mui/icons-material/Tag";
 import { useMemo } from "react";
 import { addDocument } from "../../firebase/services";
-import { async } from "@firebase/util";
 import { selectChannel } from "../../redux/actions/channelAction";
 
 const initialChannelState = {
