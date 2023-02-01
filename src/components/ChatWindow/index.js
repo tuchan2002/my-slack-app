@@ -1,9 +1,14 @@
-import { Box } from "@mui/material";
+import { Alert, Box } from "@mui/material";
 import React from "react";
+import { useSelector } from "react-redux";
 import ChatHeader from "./chat-header";
 import ChatMain from "./chat-main";
 
 const ChatWindow = () => {
+  const {
+    channelReducer: { selectedChannel },
+  } = useSelector((state) => state);
+
   return (
     <Box
       sx={{
@@ -13,7 +18,13 @@ const ChatWindow = () => {
         height: "100vh",
       }}
     >
-      <ChatHeader />
+      {selectedChannel ? (
+        <ChatHeader />
+      ) : (
+        <Alert severity="info" sx={{ pt: 2 }}>
+          Please select a channel!
+        </Alert>
+      )}
       <ChatMain />
     </Box>
   );

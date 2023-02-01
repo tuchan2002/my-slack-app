@@ -6,7 +6,7 @@ import {
 
 const initialState = {
   channels: [],
-  selectedChannel: {},
+  selectedChannel: null,
   members: [],
 };
 
