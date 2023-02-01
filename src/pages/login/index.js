@@ -37,8 +37,22 @@ const Login = () => {
     }
   };
 
-  const handleLoginWithGoogle = () => {
-    // signInWithPopup(auth, googleProvider);
+  const handleLoginWithGoogle = async () => {
+    const { _tokenResponse, user } = await signInWithPopup(
+      auth,
+      googleProvider
+    );
+
+    if (_tokenResponse?.isNewUser) {
+      console.log(_tokenResponse);
+      await addDocument("users", {
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        uid: user.uid,
+        providerId: _tokenResponse.providerId,
+      });
+    }
   };
 
   return (
@@ -69,6 +83,7 @@ const Login = () => {
         startIcon={<GoogleIcon />}
         variant="outlined"
         sx={{ minWidth: "300px" }}
+        onClick={handleLoginWithGoogle}
       >
         Continue With Google
       </Button>

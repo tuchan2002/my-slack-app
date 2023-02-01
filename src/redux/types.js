@@ -1,2 +1,2 @@
 export const AUTH = "AUTH";
-export const GET_ALL_CHANNELS = "GET_ALL_CHANNELS";
+export const GET_REALTIME_CHANNELS = "GET_REALTIME_CHANNELS";

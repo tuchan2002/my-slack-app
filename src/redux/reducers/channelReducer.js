@@ -1,4 +1,4 @@
-import { GET_ALL_CHANNELS } from "../types";
+import { GET_REALTIME_CHANNELS } from "../types";
 
 const initialState = {
   channels: [],
@@ -6,7 +6,7 @@ const initialState = {
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_ALL_CHANNELS:
+    case GET_REALTIME_CHANNELS:
       return action.payload;
     default:
       return state;
