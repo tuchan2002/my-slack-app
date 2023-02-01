@@ -1,22 +1,31 @@
 import {
   Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import { useSelector } from "react-redux";
 import TagIcon from "@mui/icons-material/Tag";
 import { useMemo } from "react";
+import { addDocument } from "../../firebase/services";
+import { async } from "@firebase/util";
 
+const initialChannelState = {
+  name: "",
+  description: "",
+};
 const ChannelList = () => {
-  const { channelReducer } = useSelector((state) => state);
-
   // const channelsCondition = useMemo(() => {
   //   return {
   //     fieldName: "members",
@@ -24,26 +33,97 @@ const ChannelList = () => {
   //     compareValue: authReducer.user.uid,
   //   };
   // }, [authReducer.user.uid]);
-  return (
-    <Box>
-      <Typography variant="h6">Channels</Typography>
-      <List sx={{ mx: -2 }}>
-        {channelReducer.channels?.map((channel) => (
-          <ListItem disablePadding key={channel.id}>
-            <ListItemButton>
-              <ListItemIcon>
-                <TagIcon />
-              </ListItemIcon>
-              <ListItemText primary={channel.name} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
 
-      <Button startIcon={<AddBoxOutlinedIcon />} variant="text">
-        Add Channels
-      </Button>
-    </Box>
+  const {
+    authReducer: { user },
+    channelReducer,
+  } = useSelector((state) => state);
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [channelData, setChannelData] = useState(initialChannelState);
+  const { name, description } = channelData;
+
+  const handleClickOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setChannelData(initialChannelState);
+    setOpenDialog(false);
+  };
+
+  const onChangeChannelDataInput = (e) => {
+    setChannelData({
+      ...channelData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleCreateChannel = async () => {
+    await addDocument("channels", { ...channelData, members: [user.uid] });
+    handleCloseDialog();
+  };
+
+  return (
+    <>
+      <Box>
+        <Typography variant="h6">Channels</Typography>
+        <List sx={{ mx: -2 }}>
+          {channelReducer.channels?.map((channel) => (
+            <ListItem disablePadding key={channel.id}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <TagIcon />
+                </ListItemIcon>
+                <ListItemText primary={channel.name} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+
+        <Button
+          startIcon={<AddBoxOutlinedIcon />}
+          variant="text"
+          onClick={handleClickOpenDialog}
+        >
+          Add Channels
+        </Button>
+      </Box>
+
+      {/* dialog */}
+      <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth>
+        <DialogTitle>Create a channel</DialogTitle>
+        <DialogContent>
+          <TextField
+            required
+            margin="dense"
+            id="name"
+            label="Name"
+            fullWidth
+            variant="standard"
+            name="name"
+            value={name}
+            onChange={onChangeChannelDataInput}
+          />
+          <TextField
+            multiline
+            maxRows={4}
+            margin="dense"
+            id="description"
+            label="Description"
+            variant="standard"
+            fullWidth
+            name="description"
+            value={description}
+            onChange={onChangeChannelDataInput}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleCreateChannel}>Create</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 
