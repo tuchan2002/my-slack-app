@@ -1,6 +1,6 @@
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../firebase/config";
-import { GET_REALTIME_CHANNELS } from "../types";
+import { GET_REALTIME_CHANNELS, SELECT_CHANNEL } from "../types";
 
 export const getRealtimeChannels = (data) => (dispatch) => {
   const q = query(
@@ -16,9 +16,16 @@ export const getRealtimeChannels = (data) => (dispatch) => {
 
     dispatch({
       type: GET_REALTIME_CHANNELS,
-      payload: { channels: documents },
+      payload: documents,
     });
   });
 
   return unsubscribe;
+};
+
+export const selectChannel = (data) => (dispatch) => {
+  dispatch({
+    type: SELECT_CHANNEL,
+    payload: data,
+  });
 };

@@ -1,2 +1,3 @@
 export const AUTH = "AUTH";
 export const GET_REALTIME_CHANNELS = "GET_REALTIME_CHANNELS";
+export const SELECT_CHANNEL = "SELECT_CHANNEL";

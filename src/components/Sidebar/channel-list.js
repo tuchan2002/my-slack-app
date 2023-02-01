@@ -15,11 +15,12 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import TagIcon from "@mui/icons-material/Tag";
 import { useMemo } from "react";
 import { addDocument } from "../../firebase/services";
 import { async } from "@firebase/util";
+import { selectChannel } from "../../redux/actions/channelAction";
 
 const initialChannelState = {
   name: "",
@@ -33,6 +34,7 @@ const ChannelList = () => {
   //     compareValue: authReducer.user.uid,
   //   };
   // }, [authReducer.user.uid]);
+  const dispatch = useDispatch();
 
   const {
     authReducer: { user },
@@ -70,7 +72,11 @@ const ChannelList = () => {
         <Typography variant="h6">Channels</Typography>
         <List sx={{ mx: -2 }}>
           {channelReducer.channels?.map((channel) => (
-            <ListItem disablePadding key={channel.id}>
+            <ListItem
+              disablePadding
+              key={channel.id}
+              onClick={() => dispatch(selectChannel(channel.id))}
+            >
               <ListItemButton>
                 <ListItemIcon>
                   <TagIcon />

@@ -8,8 +8,13 @@ import {
 } from "@mui/material";
 import React from "react";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import { useSelector } from "react-redux";
 
 const ChatHeader = () => {
+  const {
+    channelReducer: { selectedChannel },
+  } = useSelector((state) => state);
+
   return (
     <Box
       sx={{
@@ -20,8 +25,8 @@ const ChatHeader = () => {
       }}
     >
       <Box>
-        <Typography variant="h6">Channel Developer</Typography>
-        <Typography variant="body2">This is description of channel</Typography>
+        <Typography variant="h6">{selectedChannel.name}</Typography>
+        <Typography variant="body2">{selectedChannel.description}</Typography>
       </Box>
 
       <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
