@@ -35,7 +35,6 @@ export const selectChannel = (data) => (dispatch) => {
 };
 
 export const getRealtimeMemberInChannel = (data) => (dispatch) => {
-  console.log(data);
   const q = query(collection(db, "users"), where("uid", "in", data));
 
   const unsubscribe = onSnapshot(q, (snapshot) => {

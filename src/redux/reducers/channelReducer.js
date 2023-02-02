@@ -10,7 +10,7 @@ const initialState = {
   members: [],
 };
 
-const authReducer = (state = initialState, action) => {
+const channelReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_REALTIME_CHANNELS:
       return {
@@ -34,4 +34,4 @@ const authReducer = (state = initialState, action) => {
   }
 };
 
-export default authReducer;
+export default channelReducer;

@@ -12,17 +12,32 @@ import {
   Button,
   MenuItem,
   TextField,
+  Select,
+  OutlinedInput,
+  Chip,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllMembers } from "../../redux/actions/memberAcion";
+import { updateDocument } from "../../firebase/services";
+import { async } from "@firebase/util";
 
 const ChatHeader = () => {
   const {
     channelReducer: { selectedChannel, members },
+    memberReducer,
   } = useSelector((state) => state);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllMembers(selectedChannel?.members));
+  }, [dispatch]);
 
   const [openDialog, setOpenDialog] = useState(false);
+  const [membersData, setMembersData] = useState([]);
 
   const handleClickOpenDialog = () => {
     setOpenDialog(true);
@@ -30,7 +45,22 @@ const ChatHeader = () => {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
+    setMembersData([]);
   };
+
+  const handleInviteMembers = async () => {
+    const memberIds = [
+      ...selectedChannel?.members,
+      ...membersData.map((member) => member.uid),
+    ];
+    await updateDocument("channels", selectedChannel?.id, {
+      members: memberIds,
+    });
+
+    handleCloseDialog();
+  };
+
+  console.log(membersData);
 
   return (
     <>
@@ -66,26 +96,57 @@ const ChatHeader = () => {
           </AvatarGroup>
         </Box>
       </Box>
+
+      {/* dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth>
         <DialogTitle>Invite members</DialogTitle>
         <DialogContent>
-          <TextField
-            margin="dense"
-            id="role"
-            select
-            label="Members"
-            fullWidth
-            variant="standard"
-            name="role"
-          >
-            <MenuItem value={1}>Tran Tu 1</MenuItem>
-            <MenuItem value={2}>Tran Tu 2</MenuItem>
-            <MenuItem value={3}>Tran Tu 3</MenuItem>
-          </TextField>
+          <FormControl fullWidth sx={{ my: 1 }}>
+            <InputLabel id="invite-members-label">Select members</InputLabel>
+            <Select
+              labelId="invite-members-label"
+              multiple
+              value={membersData}
+              onChange={(e) => setMembersData(e.target.value)}
+              input={<OutlinedInput label="Select members" />}
+              renderValue={(selectedMembers) => (
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                  {selectedMembers.map((selectedMember) => (
+                    <Chip
+                      key={selectedMember.uid}
+                      avatar={
+                        <Avatar
+                          alt={selectedMember.displayName}
+                          src={selectedMember.photoURL}
+                        />
+                      }
+                      label={selectedMember.displayName}
+                    />
+                  ))}
+                </Box>
+              )}
+            >
+              {memberReducer.members.map((member) => (
+                <MenuItem
+                  key={member.uid}
+                  value={member}
+                  sx={{ display: "flex", gap: 1.5, alignItems: "center" }}
+                >
+                  <Avatar alt={member.displayName} src={member.photoURL} />
+                  {member.displayName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={() => {}}>Invite</Button>
+          <Button
+            disabled={membersData.length === 0}
+            onClick={handleInviteMembers}
+          >
+            Invite
+          </Button>
         </DialogActions>
       </Dialog>
     </>

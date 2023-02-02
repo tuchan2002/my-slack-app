@@ -4,7 +4,7 @@ const initialState = {
   messages: [],
 };
 
-const authReducer = (state = initialState, action) => {
+const messageReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_REALTIME_MESSAGES_BY_CHANNEL:
       return {
@@ -16,4 +16,4 @@ const authReducer = (state = initialState, action) => {
   }
 };
 
-export default authReducer;
+export default messageReducer;
