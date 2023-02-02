@@ -26,6 +26,7 @@ const Home = () => {
   }, [uid]);
 
   useEffect(() => {
+    console.log("OK");
     const unsubscribe = dispatch(
       getRealtimeMemberInChannel(selectedChannel?.members || [""])
     );
