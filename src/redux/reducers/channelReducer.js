@@ -13,9 +13,13 @@ const initialState = {
 const channelReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_REALTIME_CHANNELS:
+      // can chinh lai logic cho nay sao cho no dung y nghia cua get all channel
       return {
         ...state,
         channels: action.payload,
+        selectedChannel: action.payload.find(
+          (channel) => channel.id === state.selectedChannel?.id
+        ),
       };
     case SELECT_CHANNEL:
       return {

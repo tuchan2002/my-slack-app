@@ -26,14 +26,11 @@ import { updateDocument } from "../../firebase/services";
 import { async } from "@firebase/util";
 
 const ChatHeader = () => {
-  const {
-    channelReducer: { selectedChannel, members },
-    memberReducer,
-  } = useSelector((state) => state);
+  const { channelReducer, memberReducer } = useSelector((state) => state);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllMembers(selectedChannel?.members));
+    dispatch(getAllMembers(channelReducer?.selectedChannel?.members));
   }, [dispatch]);
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -50,17 +47,15 @@ const ChatHeader = () => {
 
   const handleInviteMembers = async () => {
     const memberIds = [
-      ...selectedChannel?.members,
+      ...channelReducer?.selectedChannel?.members,
       ...membersData.map((member) => member.uid),
     ];
-    await updateDocument("channels", selectedChannel?.id, {
+    await updateDocument("channels", channelReducer?.selectedChannel?.id, {
       members: memberIds,
     });
 
     handleCloseDialog();
   };
-
-  console.log(membersData);
 
   return (
     <>
@@ -73,9 +68,11 @@ const ChatHeader = () => {
         }}
       >
         <Box>
-          <Typography variant="h6">{selectedChannel?.name}</Typography>
+          <Typography variant="h6">
+            {channelReducer?.selectedChannel?.name}
+          </Typography>
           <Typography variant="body2">
-            {selectedChannel?.description}
+            {channelReducer?.selectedChannel?.description}
           </Typography>
         </Box>
 
@@ -85,7 +82,7 @@ const ChatHeader = () => {
           </IconButton>
 
           <AvatarGroup max={4}>
-            {members?.map((member) => (
+            {channelReducer?.members?.map((member) => (
               <Tooltip title={member.displayName} key={member.uid}>
                 <Avatar
                   alt={member.displayName}
