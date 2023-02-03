@@ -23,7 +23,6 @@ import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllMembers } from "../../redux/actions/memberAcion";
 import { updateDocument } from "../../firebase/services";
-import { async } from "@firebase/util";
 
 const ChatHeader = () => {
   const { channelReducer, memberReducer } = useSelector((state) => state);

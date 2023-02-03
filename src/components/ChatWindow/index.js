@@ -1,8 +1,9 @@
 import { Alert, Box } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
+import ChatForm from "./chat-form";
 import ChatHeader from "./chat-header";
-import ChatMain from "./chat-main";
+import MessageList from "./message-list";
 
 const ChatWindow = () => {
   const {
@@ -21,7 +22,8 @@ const ChatWindow = () => {
           }}
         >
           <ChatHeader />
-          <ChatMain />
+          <MessageList />
+          <ChatForm />
         </Box>
       ) : (
         <Alert severity="info" sx={{ pt: 2 }}>

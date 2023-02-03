@@ -38,7 +38,6 @@ export const getRealtimeChannels = (data) => (dispatch) => {
 export const getRealtimeMemberInChannel = (data) => (dispatch) => {
   const q = query(collection(db, "users"), where("uid", "in", data));
 
-  console.log("OK DESU");
   const unsubscribe = onSnapshot(q, (snapshot) => {
     const members = snapshot.docs.map((doc) => ({
       ...doc.data(),

@@ -4,7 +4,7 @@ import moment from "moment";
 
 const formatDate = (seconds) => {
   const messageMoment = moment.utc(seconds * 1000);
-  if (moment().diff(messageMoment) < 60 * 60 * 1000) {
+  if (moment().diff(messageMoment) < 59 * 60 * 1000) {
     return messageMoment.fromNow();
   } else {
     return messageMoment.format("lll");
