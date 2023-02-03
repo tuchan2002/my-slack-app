@@ -81,7 +81,7 @@ const ChatHeader = () => {
             <PersonAddAlt1Icon />
           </IconButton>
 
-          <AvatarGroup max={4}>
+          <AvatarGroup max={3}>
             {channelReducer?.members?.map((member) => (
               <Tooltip title={member.displayName} key={member.uid}>
                 <Avatar
