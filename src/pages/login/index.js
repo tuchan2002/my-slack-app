@@ -14,6 +14,7 @@ import {
   FacebookAuthProvider,
 } from "firebase/auth";
 import { addDocument } from "../../firebase/services";
+import SlackIcon from "../../assets/images/slack.png";
 
 const facebookProvider = new FacebookAuthProvider();
 const googleProvider = new GoogleAuthProvider();
@@ -58,35 +59,43 @@ const Login = () => {
   return (
     <Box
       sx={{
-        marginTop: 8,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 2,
+        bgcolor: "primary.main",
+        pt: 8,
+        height: "100vh",
       }}
     >
-      <Avatar sx={{ bgcolor: "primary.main" }}>
-        <LockOutlinedIcon />
-      </Avatar>
-      <Typography component="h1" variant="h5">
-        Login
-      </Typography>
-      <Button
-        startIcon={<FacebookRoundedIcon />}
-        variant="contained"
-        sx={{ minWidth: "300px" }}
-        onClick={handleLoginWithFacebook}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 2,
+        }}
       >
-        Continue With Facebook
-      </Button>
-      <Button
-        startIcon={<GoogleIcon />}
-        variant="outlined"
-        sx={{ minWidth: "300px" }}
-        onClick={handleLoginWithGoogle}
-      >
-        Continue With Google
-      </Button>
+        <img
+          src={SlackIcon}
+          alt="slack-icon"
+          style={{ marginBottom: "16px" }}
+        />
+        <Button
+          startIcon={<FacebookRoundedIcon />}
+          variant="contained"
+          sx={{ minWidth: "300px" }}
+          onClick={handleLoginWithFacebook}
+          color="secondary"
+        >
+          Sign In With Facebook
+        </Button>
+        <Button
+          startIcon={<GoogleIcon />}
+          variant="contained"
+          sx={{ minWidth: "300px" }}
+          onClick={handleLoginWithGoogle}
+          color="secondary"
+        >
+          Sign In With Google
+        </Button>
+      </Box>
     </Box>
   );
 };

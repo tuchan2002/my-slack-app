@@ -1,10 +1,8 @@
 import { Avatar, Box, Button, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/actions/authAction";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../../firebase/config";
 
 const SidebarTop = () => {
   const { authReducer } = useSelector((state) => state);
@@ -29,9 +27,10 @@ const SidebarTop = () => {
         <Typography>{displayName}</Typography>
       </Box>
       <Button
-        endIcon={<LogoutIcon />}
         variant="outlined"
+        startIcon={<LogoutIcon />}
         onClick={handleLogout}
+        sx={{ color: "white" }}
       >
         Logout
       </Button>

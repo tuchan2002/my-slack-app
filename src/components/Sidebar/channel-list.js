@@ -17,7 +17,6 @@ import React, { useState } from "react";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import TagIcon from "@mui/icons-material/Tag";
-import { useMemo } from "react";
 import { addDocument } from "../../firebase/services";
 import { selectChannel } from "../../redux/actions/channelAction";
 
@@ -68,31 +67,38 @@ const ChannelList = () => {
   return (
     <>
       <Box>
-        <Typography variant="h6">Channels</Typography>
+        <Typography sx={{ fontSize: "20px" }}>Channels</Typography>
         <List sx={{ mx: -2 }}>
           {channelReducer.channels?.map((channel) => (
             <ListItem
               disablePadding
               key={channel.id}
               onClick={() => dispatch(selectChannel(channel.id))}
+              sx={{
+                bgcolor: `${
+                  channel.id === channelReducer?.selectedChannel?.id
+                    ? "#2657a5"
+                    : ""
+                }`,
+              }}
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <TagIcon />
+                  <TagIcon sx={{ color: "white" }} />
                 </ListItemIcon>
                 <ListItemText primary={channel.name} />
               </ListItemButton>
             </ListItem>
           ))}
+          <ListItem disablePadding>
+            <ListItemButton onClick={handleClickOpenDialog}>
+              <ListItemIcon>
+                <AddBoxOutlinedIcon sx={{ color: "white" }} />
+              </ListItemIcon>
+              <ListItemText primary="Add Channels" />
+            </ListItemButton>
+          </ListItem>
         </List>
-
-        <Button
-          startIcon={<AddBoxOutlinedIcon />}
-          variant="text"
-          onClick={handleClickOpenDialog}
-        >
-          Add Channels
-        </Button>
       </Box>
 
       {/* dialog */}
@@ -100,7 +106,6 @@ const ChannelList = () => {
         <DialogTitle>Create a channel</DialogTitle>
         <DialogContent>
           <TextField
-            required
             margin="dense"
             id="name"
             label="Name"

@@ -13,6 +13,8 @@ const Sidebar = () => {
         display: "flex",
         flexDirection: "column",
         gap: 3,
+        bgcolor: "primary.main",
+        color: "white",
       }}
     >
       <SidebarTop />

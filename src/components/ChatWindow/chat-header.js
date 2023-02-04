@@ -76,7 +76,7 @@ const ChatHeader = () => {
         </Box>
 
         <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-          <IconButton color="primary" onClick={handleClickOpenDialog}>
+          <IconButton color="secondary" onClick={handleClickOpenDialog}>
             <PersonAddAlt1Icon />
           </IconButton>
 

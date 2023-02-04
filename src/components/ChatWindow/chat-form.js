@@ -50,7 +50,7 @@ const ChatForm = () => {
         value={messageContent}
         onChange={(e) => setMessageContent(e.target.value)}
       />
-      <Button variant="contained" onClick={handleOnSubmit}>
+      <Button variant="contained" onClick={handleOnSubmit} color="secondary">
         Send
       </Button>
     </form>
