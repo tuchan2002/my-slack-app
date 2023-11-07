@@ -1,15 +1,16 @@
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../firebase/config";
-import { GET_ALL_MEMBERS } from "../types";
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../firebase/config';
+import { GET_ALL_MEMBERS } from '../types';
 
+// eslint-disable-next-line import/prefer-default-export
 export const getAllMembers = (currentMemberInChannel) => async (dispatch) => {
-  const querySnapshot = await getDocs(collection(db, "users"));
-  const members = querySnapshot.docs
-    .map((doc) => doc.data())
-    .filter((member) => !currentMemberInChannel.includes(member.uid));
+    const querySnapshot = await getDocs(collection(db, 'users'));
+    const members = querySnapshot.docs
+        .map((doc) => doc.data())
+        .filter((member) => !currentMemberInChannel.includes(member.uid));
 
-  dispatch({
-    type: GET_ALL_MEMBERS,
-    payload: members,
-  });
+    dispatch({
+        type: GET_ALL_MEMBERS,
+        payload: members
+    });
 };
