@@ -125,7 +125,7 @@ function ChatForm() {
                     type='file'
                     accept='image/*'
                     ref={fileInputRef}
-                    // style={{ display: 'none' }}
+                    style={{ display: 'none' }}
                     onChange={handleImageChange}
                 />
                 <Button

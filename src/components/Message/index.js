@@ -32,7 +32,7 @@ function Message({ content, displayName, createdAt, photoURL, imageURL }) {
                 </Box>
                 {content && <Typography style={{marginTop: '2px'}}>{content}</Typography>}
                 {imageURL && (
-                    <div style={{height: '150px', border: '1px solid #ccc', margin: '8px 0'}}>
+                    <div className='message-image'>
                         <img
                             src={imageURL}
                             alt='imageURL'
