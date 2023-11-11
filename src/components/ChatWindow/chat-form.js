@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CloseIcon from '@mui/icons-material/Close';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { addDocument } from '../../firebase/services';
 import { getRealtimeMessagesByChannel } from '../../redux/actions/messageAction';
+import { storageDb } from '../../firebase/config';
 
 function ChatForm() {
     const dispatch = useDispatch();
@@ -60,17 +62,30 @@ function ChatForm() {
         e.preventDefault();
 
         if (image) {
-            // handle upload image
+            const imgRef = ref(storageDb, `images/${image.name}`);
+            uploadBytes(imgRef, image).then((snapshot) => getDownloadURL(snapshot.ref))
+                .then((downloadURL) => {
+                    addDocument('messages', {
+                        content: messageContent,
+                        uid,
+                        displayName,
+                        photoURL,
+                        channelId: selectedChannel.id,
+                        imageURL: downloadURL
+                    });
+                });
+        } else {
+            addDocument('messages', {
+                content: messageContent,
+                uid,
+                displayName,
+                photoURL,
+                channelId: selectedChannel.id
+            });
         }
 
-        addDocument('messages', {
-            content: messageContent,
-            uid,
-            displayName,
-            photoURL,
-            channelId: selectedChannel.id
-        });
         setMessageContent('');
+        handleDeleteImage();
     };
 
     return (
@@ -108,8 +123,9 @@ function ChatForm() {
                 </IconButton>
                 <input
                     type='file'
+                    accept='image/*'
                     ref={fileInputRef}
-                    style={{ display: 'none' }}
+                    // style={{ display: 'none' }}
                     onChange={handleImageChange}
                 />
                 <Button

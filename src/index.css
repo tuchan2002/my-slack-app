@@ -20,6 +20,7 @@
 
 .preview-image img {
   border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
 .close-button {

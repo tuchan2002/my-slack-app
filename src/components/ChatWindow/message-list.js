@@ -24,6 +24,7 @@ function MessageList() {
                     displayName={message.displayName}
                     photoURL={message.photoURL}
                     createdAt={message.createdAt?.seconds}
+                    imageURL={message?.imageURL}
                 />
             ))}
             <div ref={endOfMessagesRef} />

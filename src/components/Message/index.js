@@ -10,7 +10,7 @@ const formatDate = (seconds) => {
     return messageMoment.format('lll');
 };
 
-function Message({ content, displayName, createdAt, photoURL }) {
+function Message({ content, displayName, createdAt, photoURL, imageURL }) {
     return (
         <Box
             sx={{
@@ -30,7 +30,16 @@ function Message({ content, displayName, createdAt, photoURL }) {
                         {formatDate(createdAt)}
                     </Typography>
                 </Box>
-                <Typography>{content}</Typography>
+                {content && <Typography style={{marginTop: '2px'}}>{content}</Typography>}
+                {imageURL && (
+                    <div style={{height: '150px', border: '1px solid #ccc', margin: '8px 0'}}>
+                        <img
+                            src={imageURL}
+                            alt='imageURL'
+                            style={{height: '100%'}}
+                        />
+                    </div>
+                )}
             </Box>
         </Box>
     );
