@@ -17,6 +17,7 @@ import {
     InputLabel,
     FormControl
 } from '@mui/material';
+import VideocamIcon from '@mui/icons-material/Videocam';
 import React, { useEffect, useState } from 'react';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import { useDispatch, useSelector } from 'react-redux';
@@ -76,10 +77,12 @@ function ChatHeader() {
                 </Box>
 
                 <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <IconButton color='secondary'>
+                        <VideocamIcon />
+                    </IconButton>
                     <IconButton color='secondary' onClick={handleClickOpenDialog}>
                         <PersonAddAlt1Icon />
                     </IconButton>
-
                     <AvatarGroup max={3}>
                         {channelReducer?.members?.map((member) => (
                             <Tooltip title={member.displayName} key={member.uid}>
