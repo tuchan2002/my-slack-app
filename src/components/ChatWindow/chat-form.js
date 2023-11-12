@@ -2,12 +2,13 @@ import { Button, IconButton, TextField } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CloseIcon from '@mui/icons-material/Close';
+import moment from 'moment';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { addDocument } from '../../firebase/services';
 import { getRealtimeMessagesByChannel } from '../../redux/actions/messageAction';
 import { storageDb } from '../../firebase/config';
+import EmojiPicker from './emoji-picker';
 
 function ChatForm() {
     const dispatch = useDispatch();
@@ -58,11 +59,15 @@ function ChatForm() {
         setPreviewUrl(null);
     };
 
+    const handleEmojiSelect = (emoji) => {
+        setMessageContent((prevMessage) => prevMessage + emoji);
+    };
+
     const handleOnSubmit = (e) => {
         e.preventDefault();
 
         if (image) {
-            const imgRef = ref(storageDb, `images/${image.name}`);
+            const imgRef = ref(storageDb, `images/${image.name}-${moment()}`);
             uploadBytes(imgRef, image).then((snapshot) => getDownloadURL(snapshot.ref))
                 .then((downloadURL) => {
                     addDocument('messages', {
@@ -115,9 +120,8 @@ function ChatForm() {
                     value={messageContent}
                     onChange={(e) => setMessageContent(e.target.value)}
                 />
-                <IconButton>
-                    <AttachFileIcon />
-                </IconButton>
+                <EmojiPicker onSelect={handleEmojiSelect} />
+
                 <IconButton onClick={handleIconImageClick}>
                     <AddPhotoAlternateIcon />
                 </IconButton>
