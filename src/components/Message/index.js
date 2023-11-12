@@ -1,6 +1,7 @@
 import { Avatar, Box, Typography } from '@mui/material';
 import React from 'react';
 import moment from 'moment';
+import ReactionBox from './reaction-box';
 
 const formatDate = (seconds) => {
     const messageMoment = moment.utc(seconds * 1000);
@@ -17,7 +18,13 @@ function Message({ content, displayName, createdAt, photoURL, imageURL }) {
                 display: 'flex',
                 gap: 1,
                 alignItems: 'flex-start',
-                padding: '10px 0'
+                padding: '16px 16px 10px',
+                '&:hover': {
+                    backgroundColor: '#eee',
+                    '& .reaction-box-container': {
+                        opacity: 1
+                    }
+                }
             }}
         >
             <Avatar alt={displayName} src={photoURL} />
@@ -41,6 +48,9 @@ function Message({ content, displayName, createdAt, photoURL, imageURL }) {
                     </div>
                 )}
             </Box>
+            <div className='reaction-box-container'>
+                <ReactionBox />
+            </div>
         </Box>
     );
 }

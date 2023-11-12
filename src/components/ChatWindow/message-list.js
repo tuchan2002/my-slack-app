@@ -16,7 +16,7 @@ function MessageList() {
     }, [messageReducer?.messages]);
 
     return (
-        <Box sx={{ px: 2, overflowY: 'scroll', marginTop: 'auto' }}>
+        <Box sx={{ overflowY: 'scroll', marginTop: 'auto' }}>
             {messageReducer?.messages.map((message) => (
                 <Message
                     key={message.id}

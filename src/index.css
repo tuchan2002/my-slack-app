@@ -53,3 +53,14 @@
   border-radius: 6px;
   border: 1px solid #ccc;
 }
+
+.emoji-item {
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.reaction-box-container {
+  margin-left: 8px;
+  align-self: center;
+  opacity: 0;
+}
