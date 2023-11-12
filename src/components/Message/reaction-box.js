@@ -44,12 +44,12 @@ function ReactionBox() {
                 }}
             >
                 <Box sx={{px: 2, py: 1, display: 'flex', gap: 2 }}>
-                    <span className='emoji-item' onClick={() => handleReactionSelect('like')}>👍</span>
-                    <span className='emoji-item' onClick={() => handleReactionSelect('love')}>❤️</span>
-                    <span className='emoji-item' onClick={() => handleReactionSelect('haha')}>😂</span>
-                    <span className='emoji-item' onClick={() => handleReactionSelect('wow')}>😯</span>
-                    <span className='emoji-item' onClick={() => handleReactionSelect('sad')}>😢</span>
-                    <span className='emoji-item' onClick={() => handleReactionSelect('angry')}>😡</span>
+                    <span className='emoji-item' onClick={() => handleReactionSelect('👍')}>👍</span>
+                    <span className='emoji-item' onClick={() => handleReactionSelect('❤️')}>❤️</span>
+                    <span className='emoji-item' onClick={() => handleReactionSelect('😂')}>😂</span>
+                    <span className='emoji-item' onClick={() => handleReactionSelect('😯')}>😯</span>
+                    <span className='emoji-item' onClick={() => handleReactionSelect('😢')}>😢</span>
+                    <span className='emoji-item' onClick={() => handleReactionSelect('😡')}>😡</span>
                 </Box>
             </Popover>
         </Box>
