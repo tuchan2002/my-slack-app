@@ -107,19 +107,17 @@ function ChatForm() {
                     />
                 </div>
             )}
-            <div style={{ display: 'flex', gap: '10px'}}>
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end'}}>
                 <TextField
                     placeholder='Enter your message...'
                     variant='outlined'
-                    inputProps={{
-                        style: {
-                            padding: '8px 14px'
-                        }
-                    }}
                     fullWidth
                     value={messageContent}
                     onChange={(e) => setMessageContent(e.target.value)}
+                    multiline
+                    maxRows={4}
                 />
+
                 <EmojiPicker onSelect={handleEmojiSelect} />
 
                 <IconButton onClick={handleIconImageClick}>
