@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
+import { useSelector } from 'react-redux';
 import Popover from '@mui/material/Popover';
 import IconButton from '@mui/material/IconButton';
 import AddReactionOutlinedIcon from '@mui/icons-material/AddReactionOutlined';
+import { addDocument } from '../../firebase/services';
 
-function ReactionBox() {
+function ReactionBox({messageId}) {
+    const {
+        authReducer
+    } = useSelector((state) => state);
+
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {
@@ -18,8 +24,12 @@ function ReactionBox() {
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
-    const handleReactionSelect = (reaction) => {
-        console.log('Selected reaction:', reaction);
+    const handleReactionSelect = (emoji) => {
+        addDocument('reactions', {
+            emoji,
+            userId: authReducer.user?.uid,
+            messageId
+        });
 
         handleClose();
     };

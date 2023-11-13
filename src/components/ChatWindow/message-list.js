@@ -15,11 +15,14 @@ function MessageList() {
         scrollToBottom();
     }, [messageReducer?.messages]);
 
+    console.log('MessageList: re-render');
+
     return (
         <Box sx={{ overflowY: 'scroll', marginTop: 'auto' }}>
             {messageReducer?.messages.map((message) => (
                 <Message
                     key={message.id}
+                    messageId={message.id}
                     content={message.content}
                     displayName={message.displayName}
                     photoURL={message.photoURL}

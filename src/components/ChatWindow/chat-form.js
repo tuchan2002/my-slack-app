@@ -52,7 +52,6 @@ function ChatForm() {
             setPreviewUrl(null);
         }
     };
-    console.log('image', image);
 
     const handleDeleteImage = () => {
         setImage(null);

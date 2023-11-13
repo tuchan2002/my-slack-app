@@ -1,7 +1,10 @@
 import { Avatar, Box, Typography } from '@mui/material';
-import React from 'react';
+import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import ReactionBox from './reaction-box';
+import { db } from '../../firebase/config';
+import ReactionList from './reaction-list';
 
 const formatDate = (seconds) => {
     const messageMoment = moment.utc(seconds * 1000);
@@ -11,7 +14,30 @@ const formatDate = (seconds) => {
     return messageMoment.format('lll');
 };
 
-function Message({ content, displayName, createdAt, photoURL, imageURL }) {
+function Message({messageId, content, displayName, createdAt, photoURL, imageURL }) {
+    const [reactions, setReactions] = useState([]);
+
+    useEffect(() => {
+        const q = query(
+            collection(db, 'reactions'),
+            where('messageId', '==', messageId),
+            orderBy('createdAt')
+        );
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const documents = snapshot.docs.map((doc) => ({
+                ...doc.data(),
+                id: doc.id
+            }));
+
+            console.log('', documents);
+
+            setReactions(documents);
+        });
+
+        return unsubscribe;
+    }, [messageId]);
+
     return (
         <Box
             sx={{
@@ -47,9 +73,10 @@ function Message({ content, displayName, createdAt, photoURL, imageURL }) {
                         />
                     </div>
                 )}
+                {reactions.length > 0 && <ReactionList reactions={reactions} />}
             </Box>
             <div className='reaction-box-container'>
-                <ReactionBox />
+                <ReactionBox messageId={messageId} />
             </div>
         </Box>
     );
