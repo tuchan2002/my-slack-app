@@ -3,13 +3,16 @@ import Box from '@mui/material/Box';
 import { useSelector } from 'react-redux';
 import Popover from '@mui/material/Popover';
 import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import AddReactionOutlinedIcon from '@mui/icons-material/AddReactionOutlined';
-import { addDocument } from '../../firebase/services';
+import { addDocument, deleteDocumentsByTwoCondition } from '../../firebase/services';
 
-function ReactionBox({messageId}) {
+function ReactionBox({messageId, reactions}) {
     const {
         authReducer
     } = useSelector((state) => state);
+
+    console.log('reactions', reactions);
 
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -34,6 +37,17 @@ function ReactionBox({messageId}) {
         handleClose();
     };
 
+    const handleReactionClear = async () => {
+        await deleteDocumentsByTwoCondition('reactions', {
+            condition1Field: 'messageId',
+            condition1Value: messageId,
+            condition2Field: 'userId',
+            condition2Value: authReducer.user?.uid
+        });
+
+        handleClose();
+    };
+
     return (
         <Box>
             <IconButton aria-describedby={id} onClick={handleClick}>
@@ -53,13 +67,14 @@ function ReactionBox({messageId}) {
                     horizontal: 'left'
                 }}
             >
-                <Box sx={{px: 2, py: 1, display: 'flex', gap: 2 }}>
+                <Box sx={{px: 2, py: 1, display: 'flex', gap: 2, alignItems: 'center' }}>
                     <span className='emoji-item' onClick={() => handleReactionSelect('👍')}>👍</span>
                     <span className='emoji-item' onClick={() => handleReactionSelect('❤️')}>❤️</span>
                     <span className='emoji-item' onClick={() => handleReactionSelect('😂')}>😂</span>
                     <span className='emoji-item' onClick={() => handleReactionSelect('😯')}>😯</span>
                     <span className='emoji-item' onClick={() => handleReactionSelect('😢')}>😢</span>
                     <span className='emoji-item' onClick={() => handleReactionSelect('😡')}>😡</span>
+                    {reactions.some((reaction) => reaction.userId === authReducer.user?.uid) && <CloseIcon sx={{fontSize: 28, cursor: 'pointer'}} onClick={handleReactionClear} />}
                 </Box>
             </Popover>
         </Box>

@@ -8,7 +8,7 @@ function ReactionList({reactions}) {
     const reactionLabel = `${uniqueEmojiArray.join(' ')}  ${reactions.length > 1 ? reactions.length : ''}`;
 
     return (
-        <div className='reaction-list'>{reactionLabel}</div>
+        <div className='reaction-list' onClick={() => console.log('reaction-list: click')}>{reactionLabel}</div>
     );
 }
 

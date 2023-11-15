@@ -3,7 +3,11 @@ import {
     addDoc,
     serverTimestamp,
     updateDoc,
-    doc
+    doc,
+    getDocs,
+    query,
+    where,
+    deleteDoc
 } from 'firebase/firestore';
 import { db } from './config';
 
@@ -16,4 +20,13 @@ export const addDocument = async (collectionName, data) => {
 
 export const updateDocument = async (collectionName, docId, data) => {
     await updateDoc(doc(db, collectionName, docId), data);
+};
+
+export const deleteDocumentsByTwoCondition = async (collectionName, {condition1Field, condition1Value, condition2Field, condition2Value}) => {
+    const docCollection = collection(db, collectionName);
+
+    const q = query(docCollection, where(condition1Field, '==', condition1Value), where(condition2Field, '==', condition2Value));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.docs.map((docItem) => deleteDoc(doc(db, collectionName, docItem.id)));
 };

@@ -76,7 +76,7 @@ function Message({messageId, content, displayName, createdAt, photoURL, imageURL
                 {reactions.length > 0 && <ReactionList reactions={reactions} />}
             </Box>
             <div className='reaction-box-container'>
-                <ReactionBox messageId={messageId} />
+                <ReactionBox messageId={messageId} reactions={reactions} />
             </div>
         </Box>
     );
