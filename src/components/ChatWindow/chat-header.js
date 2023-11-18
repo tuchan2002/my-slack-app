@@ -2,9 +2,7 @@ import {
     Box,
     Typography,
     IconButton,
-    AvatarGroup,
     Avatar,
-    Tooltip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -15,11 +13,24 @@ import {
     OutlinedInput,
     Chip,
     InputLabel,
-    FormControl
+    FormControl,
+    Drawer,
+    List,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Collapse,
+    ListItem,
+    ListItemAvatar
 } from '@mui/material';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import React, { useEffect, useState } from 'react';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import InfoIcon from '@mui/icons-material/Info';
+import EditIcon from '@mui/icons-material/Edit';
+import PeopleIcon from '@mui/icons-material/People';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllMembers } from '../../redux/actions/memberAcion';
 import { updateDocument } from '../../firebase/services';
@@ -33,6 +44,8 @@ function ChatHeader() {
     }, [dispatch]);
 
     const [openDialog, setOpenDialog] = useState(false);
+    const [openDrawer, setOpenDrawer] = useState(false);
+    const [openCollapseMembers, setOpenCollapseMembers] = useState(false);
     const [membersData, setMembersData] = useState([]);
 
     const handleClickOpenDialog = () => {
@@ -42,6 +55,14 @@ function ChatHeader() {
     const handleCloseDialog = () => {
         setOpenDialog(false);
         setMembersData([]);
+    };
+
+    const handleClickOpenDrawer = () => {
+        setOpenDrawer(true);
+    };
+
+    const handleCloseDrawer = () => {
+        setOpenDrawer(false);
     };
 
     const handleInviteMembers = async () => {
@@ -64,18 +85,16 @@ function ChatHeader() {
                     p: 2,
                     display: 'flex',
                     justifyContent: 'space-between',
-                    borderBottom: '1px solid #ddd'
+                    borderBottom: '1px solid #ccc',
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                    alignItems: 'center'
                 }}
             >
                 <Box>
-                    <Typography variant='h6'>
+                    <Typography sx={{fontWeight: 700, fontSize: '24px'}}>
                         {channelReducer?.selectedChannel?.name}
                     </Typography>
-                    <Typography variant='body2'>
-                        {channelReducer?.selectedChannel?.description}
-                    </Typography>
                 </Box>
-
                 <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                     <IconButton color='secondary'>
                         <VideocamIcon />
@@ -83,16 +102,9 @@ function ChatHeader() {
                     <IconButton color='secondary' onClick={handleClickOpenDialog}>
                         <PersonAddAlt1Icon />
                     </IconButton>
-                    <AvatarGroup max={3}>
-                        {channelReducer?.members?.map((member) => (
-                            <Tooltip title={member.displayName} key={member.uid}>
-                                <Avatar
-                                    alt={member.displayName}
-                                    src={member.photoURL ? member.photoURL : ''}
-                                />
-                            </Tooltip>
-                        ))}
-                    </AvatarGroup>
+                    <IconButton color='secondary' onClick={handleClickOpenDrawer}>
+                        <InfoIcon />
+                    </IconButton>
                 </Box>
             </Box>
 
@@ -148,6 +160,52 @@ function ChatHeader() {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            {/* drawer */}
+            <Drawer
+                anchor='right'
+                open={openDrawer}
+                onClose={handleCloseDrawer}
+            >
+                <Box sx={{ p: 2, minWidth: '440px' }}>
+                    <Typography sx={{fontWeight: 700, fontSize: '20px', textAlign: 'center', py: 2 }}>
+                        {channelReducer?.selectedChannel?.name}
+                    </Typography>
+
+                    <List
+                        sx={{ width: '100%', bgcolor: 'background.paper' }}
+                        component='nav'
+                    >
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <EditIcon />
+                            </ListItemIcon>
+                            <ListItemText sx={{fontWeight: 500}} primary='Change chat name' />
+                        </ListItemButton>
+                        <ListItemButton onClick={() => setOpenCollapseMembers(!openCollapseMembers)}>
+                            <ListItemIcon>
+                                <PeopleIcon />
+                            </ListItemIcon>
+                            <ListItemText sx={{fontWeight: 500}} primary='Chat members' />
+                            {openCollapseMembers ? <ExpandLess /> : <ExpandMore />}
+                        </ListItemButton>
+                        <Collapse in={openCollapseMembers} timeout='auto' unmountOnExit>
+                            <List component='div' disablePadding>
+                                {channelReducer?.members?.map((member) => (
+                                    <ListItem disableGutters>
+                                        <ListItemButton>
+                                            <ListItemAvatar>
+                                                <Avatar alt={member.displayName} src={member.photoURL} />
+                                            </ListItemAvatar>
+                                            <ListItemText primary={member.displayName} />
+                                        </ListItemButton>
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </Collapse>
+                    </List>
+                </Box>
+            </Drawer>
         </>
     );
 }
