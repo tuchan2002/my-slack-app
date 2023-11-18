@@ -1,14 +1,9 @@
 import React from 'react';
+import generateReactionLabel from '../../utils/generateReactionLabel';
 
-function ReactionList({reactions}) {
-    const uniqueEmojiArray = reactions.filter(
-        (item, index, self) => self.findIndex((t) => t.emoji === item.emoji) === index
-    ).map((item) => item.emoji);
-
-    const reactionLabel = `${uniqueEmojiArray.join(' ')}  ${reactions.length > 1 ? reactions.length : ''}`;
-
+function ReactionList({reactions, handleOpenReactionsDialog}) {
     return (
-        <div className='reaction-list' onClick={() => console.log('reaction-list: click')}>{reactionLabel}</div>
+        <div className='reaction-list' onClick={handleOpenReactionsDialog}>{generateReactionLabel(reactions)}</div>
     );
 }
 

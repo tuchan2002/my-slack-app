@@ -15,8 +15,6 @@ function MessageList() {
         scrollToBottom();
     }, [messageReducer?.messages]);
 
-    console.log('MessageList: re-render');
-
     return (
         <Box sx={{ overflowY: 'scroll', marginTop: 'auto' }}>
             {messageReducer?.messages.map((message) => (

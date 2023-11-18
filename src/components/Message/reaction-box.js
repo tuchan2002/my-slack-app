@@ -12,8 +12,6 @@ function ReactionBox({messageId, reactions}) {
         authReducer
     } = useSelector((state) => state);
 
-    console.log('reactions', reactions);
-
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {

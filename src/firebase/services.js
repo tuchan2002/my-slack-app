@@ -7,7 +7,8 @@ import {
     getDocs,
     query,
     where,
-    deleteDoc
+    deleteDoc,
+    limit
 } from 'firebase/firestore';
 import { db } from './config';
 
@@ -29,4 +30,21 @@ export const deleteDocumentsByTwoCondition = async (collectionName, {condition1F
     const querySnapshot = await getDocs(q);
 
     querySnapshot.docs.map((docItem) => deleteDoc(doc(db, collectionName, docItem.id)));
+};
+
+export const getDocument = async (
+    collectionName,
+    key,
+    value
+) => {
+    const docRef = collection(db, collectionName);
+
+    const q = query(docRef, where(key, '==', value), limit(1));
+    const querySnapshot = await getDocs(q);
+    const data = querySnapshot.docs.map((docItem) => docItem.data());
+
+    if (data.length === 1) {
+        return data[0];
+    }
+    return null;
 };
