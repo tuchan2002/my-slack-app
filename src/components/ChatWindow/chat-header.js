@@ -25,10 +25,10 @@ import {
 } from '@mui/material';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import React, { useEffect, useState } from 'react';
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import InfoIcon from '@mui/icons-material/Info';
 import EditIcon from '@mui/icons-material/Edit';
 import PeopleIcon from '@mui/icons-material/People';
+import AddIcon from '@mui/icons-material/Add';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { useDispatch, useSelector } from 'react-redux';
@@ -41,7 +41,8 @@ function ChatHeader() {
 
     useEffect(() => {
         dispatch(getAllMembers(channelReducer?.selectedChannel?.members));
-    }, [dispatch]);
+        console.log('getAllMembers: re-call');
+    }, [dispatch, channelReducer?.selectedChannel]);
 
     const [openDialog, setOpenDialog] = useState(false);
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -99,9 +100,6 @@ function ChatHeader() {
                     <IconButton color='secondary'>
                         <VideocamIcon />
                     </IconButton>
-                    <IconButton color='secondary' onClick={handleClickOpenDialog}>
-                        <PersonAddAlt1Icon />
-                    </IconButton>
                     <IconButton color='secondary' onClick={handleClickOpenDrawer}>
                         <InfoIcon />
                     </IconButton>
@@ -110,7 +108,7 @@ function ChatHeader() {
 
             {/* dialog */}
             <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth>
-                <DialogTitle>Invite members</DialogTitle>
+                <DialogTitle>Add people</DialogTitle>
                 <DialogContent>
                     <FormControl fullWidth sx={{ my: 1 }}>
                         <InputLabel id='invite-members-label'>Select members</InputLabel>
@@ -156,7 +154,7 @@ function ChatHeader() {
                         disabled={membersData.length === 0}
                         onClick={handleInviteMembers}
                     >
-                        Invite
+                        Add people
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -189,10 +187,11 @@ function ChatHeader() {
                             <ListItemText sx={{fontWeight: 500}} primary='Chat members' />
                             {openCollapseMembers ? <ExpandLess /> : <ExpandMore />}
                         </ListItemButton>
+
                         <Collapse in={openCollapseMembers} timeout='auto' unmountOnExit>
                             <List component='div' disablePadding>
                                 {channelReducer?.members?.map((member) => (
-                                    <ListItem disableGutters>
+                                    <ListItem disableGutters key={member.uid}>
                                         <ListItemButton>
                                             <ListItemAvatar>
                                                 <Avatar alt={member.displayName} src={member.photoURL} />
@@ -201,6 +200,18 @@ function ChatHeader() {
                                         </ListItemButton>
                                     </ListItem>
                                 ))}
+                                <ListItem disableGutters>
+                                    <ListItemButton
+                                        onClick={handleClickOpenDialog}
+                                    >
+                                        <ListItemAvatar>
+                                            <Avatar>
+                                                <AddIcon />
+                                            </Avatar>
+                                        </ListItemAvatar>
+                                        <ListItemText primary='Add people' />
+                                    </ListItemButton>
+                                </ListItem>
                             </List>
                         </Collapse>
                     </List>
