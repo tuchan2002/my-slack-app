@@ -95,7 +95,7 @@ function ChannelList() {
                             <ListItemIcon>
                                 <AddBoxOutlinedIcon sx={{ color: 'white' }} />
                             </ListItemIcon>
-                            <ListItemText primary='Add Channels' />
+                            <ListItemText primary='Add channels' />
                         </ListItemButton>
                     </ListItem>
                 </List>
