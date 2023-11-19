@@ -22,8 +22,6 @@ function AddPeopleDialog({openDialog, setOpenDialog}) {
         setOpenDialog(false);
     };
 
-    console.log('membersData', membersData);
-
     const handleAddMembers = async () => {
         const memberIds = [
             // eslint-disable-next-line no-unsafe-optional-chaining
