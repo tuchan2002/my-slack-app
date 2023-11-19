@@ -1,16 +1,40 @@
 import React, { useState } from 'react';
 import { TextField } from '@mui/material';
+import { useSelector } from 'react-redux';
 import AlertDialogContainer from './alert-dialog-container';
+import { addDocument, updateDocument } from '../../firebase/services';
 
 function ChangeChannelNameDialog({openDialog, setOpenDialog}) {
+    const { authReducer: {
+        user: { uid, displayName, photoURL }
+    }, channelReducer } = useSelector((state) => state);
+
     const [newChannelName, setNewChannelName] = useState('');
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
     };
 
-    const handleChangeChannelName = () => {
-        console.log('change');
+    const handleChangeChannelName = async () => {
+        try {
+            await updateDocument('channels', channelReducer?.selectedChannel?.id, {
+                name: newChannelName
+            });
+
+            await addDocument('messages', {
+                content: `named the channel ${newChannelName}`,
+                uid,
+                displayName,
+                photoURL,
+                channelId: channelReducer?.selectedChannel?.id,
+                type: 'event'
+            });
+        } catch (error) {
+            console.log(error);
+        }
+
+        handleCloseDialog();
+        setNewChannelName('');
     };
 
     return (

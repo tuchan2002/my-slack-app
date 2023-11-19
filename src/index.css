@@ -78,3 +78,10 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   cursor: pointer;
 }
+
+.message-event {
+  text-align: center;
+  margin: 8px 0;
+  font-size: 14px;
+  color: gray;
+}

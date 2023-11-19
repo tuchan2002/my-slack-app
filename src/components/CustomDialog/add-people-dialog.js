@@ -11,16 +11,18 @@ import {
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import AlertDialogContainer from './alert-dialog-container';
-import { updateDocument } from '../../firebase/services';
+import { addDocument, updateDocument } from '../../firebase/services';
 
 function AddPeopleDialog({openDialog, setOpenDialog}) {
-    const { channelReducer, memberReducer } = useSelector((state) => state);
+    const { authReducer: {user}, channelReducer, memberReducer } = useSelector((state) => state);
 
     const [membersData, setMembersData] = useState([]);
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
     };
+
+    console.log('membersData', membersData);
 
     const handleAddMembers = async () => {
         const memberIds = [
@@ -30,6 +32,24 @@ function AddPeopleDialog({openDialog, setOpenDialog}) {
         ];
         await updateDocument('channels', channelReducer?.selectedChannel?.id, {
             members: memberIds
+        });
+
+        let contentMessageEvent = '';
+        if (membersData.length === 1) {
+            contentMessageEvent = `added ${membersData[0].displayName} to the channel`;
+        } else if (membersData.length === 2) {
+            contentMessageEvent = `added ${membersData[0].displayName} and ${membersData[1].displayName} to the channel`;
+        } else if (membersData.length > 2) {
+            contentMessageEvent = `added ${membersData[0].displayName} and ${membersData.length - 1} others to the channel`;
+        }
+
+        await addDocument('messages', {
+            content: contentMessageEvent,
+            uid: user.uid,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+            channelId: channelReducer?.selectedChannel?.id,
+            type: 'event'
         });
 
         handleCloseDialog();
