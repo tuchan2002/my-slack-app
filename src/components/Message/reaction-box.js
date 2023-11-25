@@ -29,6 +29,7 @@ function ReactionBox({messageId, reactions}) {
         addDocument('reactions', {
             emoji,
             userId: authReducer.user?.uid,
+            user: authReducer.user,
             messageId
         });
 
