@@ -5,7 +5,6 @@ import moment from 'moment';
 import ReactionBox from './reaction-box';
 import { db } from '../../firebase/config';
 import ReactionList from './reaction-list';
-import { getDocument } from '../../firebase/services';
 import generateReactionLabel from '../../utils/generateReactionLabel';
 import generateUsersFromReactions from '../../utils/generateUsersFromReactions';
 
@@ -34,22 +33,7 @@ function Message({messageId, content, displayName, createdAt, photoURL, imageURL
                 id: doc.id
             }));
 
-            const reactionsDataJoinUsersPromises = reactionsData.map(async (reaction) => {
-                const userData = await getDocument('users', 'uid', reaction.userId);
-
-                return {
-                    ...reaction,
-                    user: userData
-                };
-            });
-
-            Promise.all(reactionsDataJoinUsersPromises)
-                .then((results) => {
-                    setReactions(results);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+            setReactions(reactionsData);
         });
 
         return unsubscribe;
