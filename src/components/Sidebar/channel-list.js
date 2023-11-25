@@ -41,7 +41,7 @@ function ChannelList() {
 
     const [openDialog, setOpenDialog] = useState(false);
     const [channelData, setChannelData] = useState(initialChannelState);
-    const { name, description } = channelData;
+    const { name } = channelData;
 
     const handleClickOpenDialog = () => {
         setOpenDialog(true);
@@ -95,7 +95,7 @@ function ChannelList() {
                             <ListItemIcon>
                                 <AddBoxOutlinedIcon sx={{ color: 'white' }} />
                             </ListItemIcon>
-                            <ListItemText primary='Add Channels' />
+                            <ListItemText primary='Add channels' />
                         </ListItemButton>
                     </ListItem>
                 </List>
@@ -113,18 +113,6 @@ function ChannelList() {
                         variant='standard'
                         name='name'
                         value={name}
-                        onChange={onChangeChannelDataInput}
-                    />
-                    <TextField
-                        multiline
-                        maxRows={4}
-                        margin='dense'
-                        id='description'
-                        label='Description'
-                        variant='standard'
-                        fullWidth
-                        name='description'
-                        value={description}
                         onChange={onChangeChannelDataInput}
                     />
                 </DialogContent>

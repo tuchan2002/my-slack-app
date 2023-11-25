@@ -1,150 +1,64 @@
 import {
     Box,
     Typography,
-    IconButton,
-    AvatarGroup,
-    Avatar,
-    Tooltip,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Button,
-    MenuItem,
-    Select,
-    OutlinedInput,
-    Chip,
-    InputLabel,
-    FormControl
+    IconButton
 } from '@mui/material';
+import VideocamIcon from '@mui/icons-material/Videocam';
 import React, { useEffect, useState } from 'react';
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import InfoIcon from '@mui/icons-material/Info';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllMembers } from '../../redux/actions/memberAcion';
-import { updateDocument } from '../../firebase/services';
+import MainDrawer from '../MainDrawer';
 
 function ChatHeader() {
-    const { channelReducer, memberReducer } = useSelector((state) => state);
+    const { channelReducer } = useSelector((state) => state);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(getAllMembers(channelReducer?.selectedChannel?.members));
-    }, [dispatch]);
+        console.log('getAllMembers: re-call');
+    }, [dispatch, channelReducer?.selectedChannel]);
 
-    const [openDialog, setOpenDialog] = useState(false);
-    const [membersData, setMembersData] = useState([]);
+    const [openDrawer, setOpenDrawer] = useState(false);
 
-    const handleClickOpenDialog = () => {
-        setOpenDialog(true);
+    const handleClickOpenDrawer = () => {
+        setOpenDrawer(true);
     };
 
-    const handleCloseDialog = () => {
-        setOpenDialog(false);
-        setMembersData([]);
-    };
-
-    const handleInviteMembers = async () => {
-        const memberIds = [
-            // eslint-disable-next-line no-unsafe-optional-chaining
-            ...channelReducer?.selectedChannel?.members,
-            ...membersData.map((member) => member.uid)
-        ];
-        await updateDocument('channels', channelReducer?.selectedChannel?.id, {
-            members: memberIds
-        });
-
-        handleCloseDialog();
+    const handleCloseDrawer = () => {
+        setOpenDrawer(false);
     };
 
     return (
         <>
+            <MainDrawer
+                openDrawer={openDrawer}
+                handleCloseDrawer={handleCloseDrawer}
+            />
             <Box
                 sx={{
                     p: 2,
                     display: 'flex',
                     justifyContent: 'space-between',
-                    borderBottom: '1px solid #ddd'
+                    borderBottom: '1px solid #ccc',
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                    alignItems: 'center'
                 }}
             >
                 <Box>
-                    <Typography variant='h6'>
+                    <Typography sx={{fontWeight: 700, fontSize: '24px'}}>
                         {channelReducer?.selectedChannel?.name}
                     </Typography>
-                    <Typography variant='body2'>
-                        {channelReducer?.selectedChannel?.description}
-                    </Typography>
                 </Box>
-
                 <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                    <IconButton color='secondary' onClick={handleClickOpenDialog}>
-                        <PersonAddAlt1Icon />
+                    <IconButton color='secondary'>
+                        <VideocamIcon />
                     </IconButton>
-
-                    <AvatarGroup max={3}>
-                        {channelReducer?.members?.map((member) => (
-                            <Tooltip title={member.displayName} key={member.uid}>
-                                <Avatar
-                                    alt={member.displayName}
-                                    src={member.photoURL ? member.photoURL : ''}
-                                />
-                            </Tooltip>
-                        ))}
-                    </AvatarGroup>
+                    <IconButton color='secondary' onClick={handleClickOpenDrawer}>
+                        <InfoIcon />
+                    </IconButton>
                 </Box>
             </Box>
-
-            {/* dialog */}
-            <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth>
-                <DialogTitle>Invite members</DialogTitle>
-                <DialogContent>
-                    <FormControl fullWidth sx={{ my: 1 }}>
-                        <InputLabel id='invite-members-label'>Select members</InputLabel>
-                        <Select
-                            labelId='invite-members-label'
-                            multiple
-                            value={membersData}
-                            onChange={(e) => setMembersData(e.target.value)}
-                            input={<OutlinedInput label='Select members' />}
-                            renderValue={(selectedMembers) => (
-                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                    {selectedMembers.map((selectedMember) => (
-                                        <Chip
-                                            key={selectedMember.uid}
-                                            avatar={(
-                                                <Avatar
-                                                    alt={selectedMember.displayName}
-                                                    src={selectedMember.photoURL}
-                                                />
-                                            )}
-                                            label={selectedMember.displayName}
-                                        />
-                                    ))}
-                                </Box>
-                            )}
-                        >
-                            {memberReducer.members.map((member) => (
-                                <MenuItem
-                                    key={member.uid}
-                                    value={member}
-                                    sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}
-                                >
-                                    <Avatar alt={member.displayName} src={member.photoURL} />
-                                    {member.displayName}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseDialog}>Cancel</Button>
-                    <Button
-                        disabled={membersData.length === 0}
-                        onClick={handleInviteMembers}
-                    >
-                        Invite
-                    </Button>
-                </DialogActions>
-            </Dialog>
         </>
     );
 }

@@ -23,8 +23,6 @@ export const getRealtimeChannels = (data) => (dispatch) => {
             id: doc.id
         }));
 
-        // chua update selectedChannel ak? update di, dinh update moi tk channels ak
-        console.log(GET_REALTIME_CHANNELS);
         dispatch({
             type: GET_REALTIME_CHANNELS,
             payload: documents
@@ -42,7 +40,6 @@ export const getRealtimeMemberInChannel = (data) => (dispatch) => {
             ...doc.data()
         }));
 
-        console.log(GET_REALTIME_MEMBERS);
         dispatch({
             type: GET_REALTIME_MEMBERS,
             payload: members
