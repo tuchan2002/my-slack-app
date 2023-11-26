@@ -6,7 +6,7 @@ import { addDocument, updateDocument } from '../../firebase/services';
 
 function ChangeChannelNameDialog({openDialog, setOpenDialog}) {
     const { authReducer: {
-        user: { uid, displayName, photoURL }
+        user
     }, channelReducer } = useSelector((state) => state);
 
     const [newChannelName, setNewChannelName] = useState('');
@@ -23,9 +23,8 @@ function ChangeChannelNameDialog({openDialog, setOpenDialog}) {
 
             await addDocument('messages', {
                 content: `named the channel ${newChannelName}`,
-                uid,
-                displayName,
-                photoURL,
+                userId: user?.uid,
+                user,
                 channelId: channelReducer?.selectedChannel?.id,
                 type: 'event'
             });

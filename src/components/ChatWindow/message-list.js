@@ -23,8 +23,8 @@ function MessageList() {
                     <MessageEvent
                         key={message.id}
                         content={message.content}
-                        displayName={message.displayName}
-                        uid={message.uid}
+                        displayName={message.user?.displayName}
+                        uid={message.userId}
                         createdAt={message.createdAt?.seconds}
                     />
                 )
@@ -33,8 +33,8 @@ function MessageList() {
                         key={message.id}
                         messageId={message.id}
                         content={message.content}
-                        displayName={message.displayName}
-                        photoURL={message.photoURL}
+                        displayName={message.user?.displayName}
+                        photoURL={message.user?.photoURL}
                         createdAt={message.createdAt?.seconds}
                         imageURL={message?.imageURL}
                     />

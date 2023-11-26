@@ -43,9 +43,8 @@ function AddPeopleDialog({openDialog, setOpenDialog}) {
 
         await addDocument('messages', {
             content: contentMessageEvent,
-            uid: user.uid,
-            displayName: user.displayName,
-            photoURL: user.photoURL,
+            userId: user?.uid,
+            user,
             channelId: channelReducer?.selectedChannel?.id,
             type: 'event'
         });

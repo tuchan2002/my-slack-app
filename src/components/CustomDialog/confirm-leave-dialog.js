@@ -26,9 +26,8 @@ function ConfirmLeaveDialog({openDialog, setOpenDialog}) {
 
             await addDocument('messages', {
                 content: 'left the channel',
-                uid: user.uid,
-                displayName: user.displayName,
-                photoURL: user.photoURL,
+                userId: user?.uid,
+                user,
                 channelId: channelReducer?.selectedChannel?.id,
                 type: 'event'
             });

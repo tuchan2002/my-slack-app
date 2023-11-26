@@ -20,7 +20,7 @@ function ChatForm() {
 
     const {
         authReducer: {
-            user: { uid, displayName, photoURL }
+            user
         },
         channelReducer: { selectedChannel }
     } = useSelector((state) => state);
@@ -71,20 +71,20 @@ function ChatForm() {
                 .then((downloadURL) => {
                     addDocument('messages', {
                         content: messageContent,
-                        uid,
-                        displayName,
-                        photoURL,
+                        userId: user?.uid,
+                        user,
                         channelId: selectedChannel.id,
-                        imageURL: downloadURL
+                        imageURL: downloadURL,
+                        type: 'normal'
                     });
                 });
         } else {
             addDocument('messages', {
                 content: messageContent,
-                uid,
-                displayName,
-                photoURL,
-                channelId: selectedChannel.id
+                userId: user?.uid,
+                user,
+                channelId: selectedChannel.id,
+                type: 'normal'
             });
         }
 
