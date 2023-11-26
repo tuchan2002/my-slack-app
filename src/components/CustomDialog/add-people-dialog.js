@@ -23,32 +23,35 @@ function AddPeopleDialog({openDialog, setOpenDialog}) {
     };
 
     const handleAddMembers = async () => {
-        const memberIds = [
+        try {
+            const memberIds = [
             // eslint-disable-next-line no-unsafe-optional-chaining
-            ...channelReducer?.selectedChannel?.members,
-            ...membersData.map((member) => member.uid)
-        ];
-        await updateDocument('channels', channelReducer?.selectedChannel?.id, {
-            members: memberIds
-        });
+                ...channelReducer?.selectedChannel?.members,
+                ...membersData.map((member) => member.uid)
+            ];
+            await updateDocument('channels', channelReducer?.selectedChannel?.id, {
+                members: memberIds
+            });
 
-        let contentMessageEvent = '';
-        if (membersData.length === 1) {
-            contentMessageEvent = `added ${membersData[0].displayName} to the channel`;
-        } else if (membersData.length === 2) {
-            contentMessageEvent = `added ${membersData[0].displayName} and ${membersData[1].displayName} to the channel`;
-        } else if (membersData.length > 2) {
-            contentMessageEvent = `added ${membersData[0].displayName} and ${membersData.length - 1} others to the channel`;
+            let contentMessageEvent = '';
+            if (membersData.length === 1) {
+                contentMessageEvent = `added ${membersData[0].displayName} to the channel`;
+            } else if (membersData.length === 2) {
+                contentMessageEvent = `added ${membersData[0].displayName} and ${membersData[1].displayName} to the channel`;
+            } else if (membersData.length > 2) {
+                contentMessageEvent = `added ${membersData[0].displayName} and ${membersData.length - 1} others to the channel`;
+            }
+
+            await addDocument('messages', {
+                content: contentMessageEvent,
+                userId: user?.uid,
+                user,
+                channelId: channelReducer?.selectedChannel?.id,
+                type: 'event'
+            });
+        } catch (error) {
+            console.error(error);
         }
-
-        await addDocument('messages', {
-            content: contentMessageEvent,
-            userId: user?.uid,
-            user,
-            channelId: channelReducer?.selectedChannel?.id,
-            type: 'event'
-        });
-
         handleCloseDialog();
         setMembersData([]);
     };

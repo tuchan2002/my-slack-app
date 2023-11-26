@@ -37,12 +37,16 @@ function ReactionBox({messageId, reactions}) {
     };
 
     const handleReactionClear = async () => {
-        await deleteDocumentsByTwoCondition('reactions', {
-            condition1Field: 'messageId',
-            condition1Value: messageId,
-            condition2Field: 'userId',
-            condition2Value: authReducer.user?.uid
-        });
+        try {
+            await deleteDocumentsByTwoCondition('reactions', {
+                condition1Field: 'messageId',
+                condition1Value: messageId,
+                condition2Field: 'userId',
+                condition2Value: authReducer.user?.uid
+            });
+        } catch (error) {
+            console.error(error);
+        }
 
         handleClose();
     };

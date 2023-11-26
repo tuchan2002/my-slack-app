@@ -19,37 +19,45 @@ function Login() {
     // const { authReducer } = useSelector((state) => state);
 
     const handleLoginWithFacebook = async () => {
-        const { _tokenResponse, user } = await signInWithPopup(
-            auth,
-            facebookProvider
-        );
+        try {
+            const { _tokenResponse, user } = await signInWithPopup(
+                auth,
+                facebookProvider
+            );
 
-        if (_tokenResponse?.isNewUser) {
-            await addDocument('users', {
-                displayName: user.displayName,
-                email: user.email,
-                photoURL: user.photoURL,
-                uid: user.uid,
-                providerId: _tokenResponse.providerId
-            });
+            if (_tokenResponse?.isNewUser) {
+                await addDocument('users', {
+                    displayName: user.displayName,
+                    email: user.email,
+                    photoURL: user.photoURL,
+                    uid: user.uid,
+                    providerId: _tokenResponse.providerId
+                });
+            }
+        } catch (error) {
+            console.error(error);
         }
     };
 
     const handleLoginWithGoogle = async () => {
-        const { _tokenResponse, user } = await signInWithPopup(
-            auth,
-            googleProvider
-        );
+        try {
+            const { _tokenResponse, user } = await signInWithPopup(
+                auth,
+                googleProvider
+            );
 
-        if (_tokenResponse?.isNewUser) {
-            console.log(_tokenResponse);
-            await addDocument('users', {
-                displayName: user.displayName,
-                email: user.email,
-                photoURL: user.photoURL,
-                uid: user.uid,
-                providerId: _tokenResponse.providerId
-            });
+            if (_tokenResponse?.isNewUser) {
+                console.log(_tokenResponse);
+                await addDocument('users', {
+                    displayName: user.displayName,
+                    email: user.email,
+                    photoURL: user.photoURL,
+                    uid: user.uid,
+                    providerId: _tokenResponse.providerId
+                });
+            }
+        } catch (error) {
+            console.error(error);
         }
     };
 
