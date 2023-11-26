@@ -29,7 +29,7 @@ function ChangeChannelNameDialog({openDialog, setOpenDialog}) {
                 type: 'event'
             });
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
 
         handleCloseDialog();

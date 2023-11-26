@@ -60,7 +60,11 @@ function ChannelList() {
     };
 
     const handleCreateChannel = async () => {
-        await addDocument('channels', { ...channelData, members: [user.uid] });
+        try {
+            await addDocument('channels', { ...channelData, members: [user.uid] });
+        } catch (error) {
+            console.error(error);
+        }
         handleCloseDialog();
     };
 
