@@ -16,7 +16,6 @@ function ChatHeader() {
 
     useEffect(() => {
         dispatch(getAllMembers(channelReducer?.selectedChannel?.members));
-        console.log('getAllMembers: re-call');
     }, [dispatch, channelReducer?.selectedChannel]);
 
     const [openDrawer, setOpenDrawer] = useState(false);
