@@ -43,11 +43,11 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "ac:7d:dc:82:e4:b6:c8:ef:ef:80:9e:d9:2e:92:e2:0d"
+            - "73:a7:9a:b8:f5:c8:29:0d:4d:d6:fc:1e:81:75:2c:ba"
       - run:
           name: Deploy Over SSH
           command: |
-            ssh -oStrictHostKeyChecking=no -vv 'tuchanvnu-gitpodtest-hf9oufykvco@tuchanvnu-gitpodtest-hf9oufykvco.ssh.ws-us105.gitpod.io' "./deploy.sh"
+            ssh -oStrictHostKeyChecking=no -vv 'root@159.223.88.200' "./deploy-my-slack-app.sh"
 
 workflows:
   test-build-deploy:
