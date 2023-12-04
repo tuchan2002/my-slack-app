@@ -32,10 +32,6 @@ function pushChannelOnTop(state, channelId) {
         return state;
     }
 
-    if (newState.selectedChannel === targetChannelId) {
-        newState.selectedChannel = 0;
-    }
-
     const targetChannel = newState.channels[targetChannelId];
     newState.channels.splice(targetChannelId, 1);
     newState.channels.unshift(targetChannel);

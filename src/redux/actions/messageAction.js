@@ -35,6 +35,8 @@ export const getRealtimeMessagesByChannel = (data) => (dispatch) => {
  * Listen to the Messages table on Firebase. Update message states and channel states when the database changed.
  */
 export const listenRealtimeMessages = () => (dispatch) => {
+    // TODO: query only messages from channels that current user is in
+    // TODO: add indicator to notify user that new message has arrived
     const q = query(collection(db, 'messages'), orderBy('createdAt', 'desc'));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
