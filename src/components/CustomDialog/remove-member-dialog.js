@@ -37,7 +37,7 @@ export default function RemoveMemberDialog({
         } catch (err) {
             console.log(err);
         }
-    }, []);
+    }, [member]);
 
     return (
         <AlertDialogContainer
@@ -45,7 +45,7 @@ export default function RemoveMemberDialog({
             handleCloseDialog={handleCloseDialog}
             title='Confirmation for Removing member'
             onConfirm={handleRemoveMember}
-            onConfirmText='Leave'
+            onConfirmText='Remove'
         >
             {`Are you sure you want to remove ${member.displayName} from the channel?`}
         </AlertDialogContainer>
