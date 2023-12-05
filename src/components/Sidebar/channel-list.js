@@ -22,7 +22,8 @@ import { selectChannel } from '../../redux/actions/channelAction';
 
 const initialChannelState = {
     name: '',
-    description: ''
+    description: '',
+    admin: '' // uid of channel creator
 };
 function ChannelList() {
     // const channelsCondition = useMemo(() => {
@@ -61,7 +62,8 @@ function ChannelList() {
 
     const handleCreateChannel = async () => {
         try {
-            await addDocument('channels', { ...channelData, members: [user.uid] });
+            // TODO: Add handling admin change when admin leaves channel.
+            await addDocument('channels', { ...channelData, members: [user.uid], admin: user.uid });
         } catch (error) {
             console.error(error);
         }
