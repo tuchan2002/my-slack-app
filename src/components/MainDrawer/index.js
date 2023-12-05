@@ -1,10 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
 import PeopleIcon from '@mui/icons-material/People';
 import AddIcon from '@mui/icons-material/Add';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {
     Box,
     Typography,
@@ -16,16 +15,14 @@ import {
     ListItemText,
     Collapse,
     ListItem,
-    ListItemAvatar,
-    IconButton,
-    Menu,
-    MenuItem
+    ListItemAvatar
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import AddPeopleDialog from '../CustomDialog/add-people-dialog';
 import ConfirmLeaveDialog from '../CustomDialog/confirm-leave-dialog';
 import ChangeChannelNameDialog from '../CustomDialog/change-channel-name-dialog';
 import RemoveMemberDialog from '../CustomDialog/remove-member-dialog';
+import MenuAdminItem from './menu-admin-item';
 
 function MainDrawer({ openDrawer, handleCloseDrawer }) {
     const {
@@ -40,10 +37,6 @@ function MainDrawer({ openDrawer, handleCloseDrawer }) {
 
     const [openRemoveMemberDialog, setOpenRemoveMemberDialog] = useState(false);
     const [removedMember, setRemovedMember] = useState({displayName: '名前なし'});
-
-    const [menuAnchor, setMenuAnchor] = useState(null);
-
-    const memberMenuOpen = Boolean(menuAnchor);
 
     const handleToggleOpenCollapseMembers = () => {
         setOpenCollapseMembers(!openCollapseMembers);
@@ -61,14 +54,6 @@ function MainDrawer({ openDrawer, handleCloseDrawer }) {
         setOpenChangeChannelNameDialog(true);
     };
 
-    const memberMenuClick = useCallback((event) => {
-        setMenuAnchor(event.currentTarget);
-    }, []);
-
-    const memberMenuClose = useCallback(() => {
-        setMenuAnchor(null);
-    }, []);
-
     function getChannelAdmin() {
         return channelReducer.channels.find(
             (channel) => channel.id === channelReducer.selectedChannel.id
@@ -76,10 +61,9 @@ function MainDrawer({ openDrawer, handleCloseDrawer }) {
     }
 
     function handleClickOpenRemoveMemberDialog(member) {
-        return () => {
-            setOpenRemoveMemberDialog(true);
-            setRemovedMember(member);
-        };
+        console.log(member);
+        setOpenRemoveMemberDialog(true);
+        setRemovedMember(member);
     }
 
     return (
@@ -149,26 +133,7 @@ function MainDrawer({ openDrawer, handleCloseDrawer }) {
                                             <ListItemText primary={member.displayName} />
                                             {getChannelAdmin() === user.uid
                                                 && user.uid !== member.uid && (
-                                                <>
-                                                    <IconButton
-                                                        aria-label='menu'
-                                                        onClick={memberMenuClick}
-                                                    >
-                                                        <MoreHorizIcon />
-                                                    </IconButton>
-                                                    <Menu
-                                                        anchorEl={menuAnchor}
-                                                        open={memberMenuOpen}
-                                                        onClose={memberMenuClose}
-                                                    >
-                                                        <MenuItem>Make admin</MenuItem>
-                                                        <MenuItem
-                                                            onClick={handleClickOpenRemoveMemberDialog(member)}
-                                                        >
-                                                            Remove Member
-                                                        </MenuItem>
-                                                    </Menu>
-                                                </>
+                                                <MenuAdminItem handleClickOpenRemoveMemberDialog={() => handleClickOpenRemoveMemberDialog(member)} />
                                             )}
                                         </ListItemButton>
                                     </ListItem>
