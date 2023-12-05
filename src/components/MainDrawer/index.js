@@ -61,7 +61,6 @@ function MainDrawer({ openDrawer, handleCloseDrawer }) {
     }
 
     function handleClickOpenRemoveMemberDialog(member) {
-        console.log(member);
         setOpenRemoveMemberDialog(true);
         setRemovedMember(member);
     }
