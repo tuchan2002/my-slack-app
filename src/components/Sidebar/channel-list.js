@@ -13,12 +13,13 @@ import {
     TextField,
     Typography
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import { useDispatch, useSelector } from 'react-redux';
 import TagIcon from '@mui/icons-material/Tag';
 import { addDocument } from '../../firebase/services';
 import { selectChannel } from '../../redux/actions/channelAction';
+import { listenRealtimeMessages } from '../../redux/actions/messageAction';
 
 const initialChannelState = {
     name: '',
@@ -39,6 +40,11 @@ function ChannelList() {
         authReducer: { user },
         channelReducer
     } = useSelector((state) => state);
+
+    useEffect(() => {
+        const unsubscribe = dispatch(listenRealtimeMessages());
+        return unsubscribe;
+    }, []);
 
     const [openDialog, setOpenDialog] = useState(false);
     const [channelData, setChannelData] = useState(initialChannelState);
