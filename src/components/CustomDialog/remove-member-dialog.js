@@ -34,6 +34,8 @@ export default function RemoveMemberDialog({
                 channelId: channelReducer?.selectedChannel?.id,
                 type: 'event'
             });
+
+            setOpenDialog(false);
         } catch (err) {
             console.log(err);
         }
