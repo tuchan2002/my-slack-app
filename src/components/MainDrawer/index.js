@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
 import PeopleIcon from '@mui/icons-material/People';
 import AddIcon from '@mui/icons-material/Add';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {
     Box,
     Typography,
@@ -15,20 +16,34 @@ import {
     ListItemText,
     Collapse,
     ListItem,
-    ListItemAvatar
+    ListItemAvatar,
+    IconButton,
+    Menu,
+    MenuItem
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import AddPeopleDialog from '../CustomDialog/add-people-dialog';
 import ConfirmLeaveDialog from '../CustomDialog/confirm-leave-dialog';
 import ChangeChannelNameDialog from '../CustomDialog/change-channel-name-dialog';
+import RemoveMemberDialog from '../CustomDialog/remove-member-dialog';
 
-function MainDrawer({openDrawer, handleCloseDrawer}) {
-    const { channelReducer } = useSelector((state) => state);
+function MainDrawer({ openDrawer, handleCloseDrawer }) {
+    const {
+        channelReducer,
+        authReducer: { user }
+    } = useSelector((state) => state);
 
     const [openCollapseMembers, setOpenCollapseMembers] = useState(false);
     const [openAddPeopleDialog, setOpenAddPeopleDialog] = useState(false);
     const [openConfirmLeaveDialog, setOpenConfirmLeaveDialog] = useState(false);
     const [openChangeChannelNameDialog, setOpenChangeChannelNameDialog] = useState(false);
+
+    const [openRemoveMemberDialog, setOpenRemoveMemberDialog] = useState(false);
+    const [removedMember, setRemovedMember] = useState({displayName: '名前なし'});
+
+    const [menuAnchor, setMenuAnchor] = useState(null);
+
+    const memberMenuOpen = Boolean(menuAnchor);
 
     const handleToggleOpenCollapseMembers = () => {
         setOpenCollapseMembers(!openCollapseMembers);
@@ -46,6 +61,27 @@ function MainDrawer({openDrawer, handleCloseDrawer}) {
         setOpenChangeChannelNameDialog(true);
     };
 
+    const memberMenuClick = useCallback((event) => {
+        setMenuAnchor(event.currentTarget);
+    }, []);
+
+    const memberMenuClose = useCallback(() => {
+        setMenuAnchor(null);
+    }, []);
+
+    function getChannelAdmin() {
+        return channelReducer.channels.find(
+            (channel) => channel.id === channelReducer.selectedChannel.id
+        )?.admin;
+    }
+
+    function handleClickOpenRemoveMemberDialog(member) {
+        return () => {
+            setOpenRemoveMemberDialog(true);
+            setRemovedMember(member);
+        };
+    }
+
     return (
         <>
             <ChangeChannelNameDialog
@@ -60,13 +96,21 @@ function MainDrawer({openDrawer, handleCloseDrawer}) {
                 openDialog={openConfirmLeaveDialog}
                 setOpenDialog={setOpenConfirmLeaveDialog}
             />
-            <Drawer
-                anchor='right'
-                open={openDrawer}
-                onClose={handleCloseDrawer}
-            >
+            <RemoveMemberDialog
+                openDialog={openRemoveMemberDialog}
+                setOpenDialog={setOpenRemoveMemberDialog}
+                member={removedMember}
+            />
+            <Drawer anchor='right' open={openDrawer} onClose={handleCloseDrawer}>
                 <Box sx={{ p: 2, minWidth: '450px' }}>
-                    <Typography sx={{fontWeight: 700, fontSize: '20px', textAlign: 'center', py: 2 }}>
+                    <Typography
+                        sx={{
+                            fontWeight: 700,
+                            fontSize: '20px',
+                            textAlign: 'center',
+                            py: 2
+                        }}
+                    >
                         {channelReducer?.selectedChannel?.name}
                     </Typography>
 
@@ -78,13 +122,16 @@ function MainDrawer({openDrawer, handleCloseDrawer}) {
                             <ListItemIcon>
                                 <EditIcon />
                             </ListItemIcon>
-                            <ListItemText sx={{fontWeight: 500}} primary='Change channel name' />
+                            <ListItemText
+                                sx={{ fontWeight: 500 }}
+                                primary='Change channel name'
+                            />
                         </ListItemButton>
                         <ListItemButton onClick={handleToggleOpenCollapseMembers}>
                             <ListItemIcon>
                                 <PeopleIcon />
                             </ListItemIcon>
-                            <ListItemText sx={{fontWeight: 500}} primary='Chat members' />
+                            <ListItemText sx={{ fontWeight: 500 }} primary='Chat members' />
                             {openCollapseMembers ? <ExpandLess /> : <ExpandMore />}
                         </ListItemButton>
 
@@ -94,9 +141,35 @@ function MainDrawer({openDrawer, handleCloseDrawer}) {
                                     <ListItem disableGutters key={member.uid}>
                                         <ListItemButton>
                                             <ListItemAvatar>
-                                                <Avatar alt={member.displayName} src={member.photoURL} />
+                                                <Avatar
+                                                    alt={member.displayName}
+                                                    src={member.photoURL}
+                                                />
                                             </ListItemAvatar>
                                             <ListItemText primary={member.displayName} />
+                                            {getChannelAdmin() === user.uid
+                                                && user.uid !== member.uid && (
+                                                <>
+                                                    <IconButton
+                                                        aria-label='menu'
+                                                        onClick={memberMenuClick}
+                                                    >
+                                                        <MoreHorizIcon />
+                                                    </IconButton>
+                                                    <Menu
+                                                        anchorEl={menuAnchor}
+                                                        open={memberMenuOpen}
+                                                        onClose={memberMenuClose}
+                                                    >
+                                                        <MenuItem>Make admin</MenuItem>
+                                                        <MenuItem
+                                                            onClick={handleClickOpenRemoveMemberDialog(member)}
+                                                        >
+                                                            Remove Member
+                                                        </MenuItem>
+                                                    </Menu>
+                                                </>
+                                            )}
                                         </ListItemButton>
                                     </ListItem>
                                 ))}
@@ -110,7 +183,6 @@ function MainDrawer({openDrawer, handleCloseDrawer}) {
                                         <ListItemText primary='Add people' />
                                     </ListItemButton>
                                 </ListItem>
-
                             </List>
                         </Collapse>
                         <ListItemButton onClick={handleClickOpenConfirmLeaveDialog}>
