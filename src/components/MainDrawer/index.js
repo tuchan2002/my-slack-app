@@ -129,7 +129,7 @@ function MainDrawer({ openDrawer, handleCloseDrawer }) {
                                                     src={member.photoURL}
                                                 />
                                             </ListItemAvatar>
-                                            <ListItemText primary={member.displayName} />
+                                            <ListItemText primary={member.displayName} secondary={member.uid === getChannelAdmin() ? 'Admin' : ''} />
                                             {getChannelAdmin() === user.uid
                                                 && user.uid !== member.uid && (
                                                 <MenuAdminItem handleClickOpenRemoveMemberDialog={() => handleClickOpenRemoveMemberDialog(member)} />
