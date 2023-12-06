@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  fpis_app:
+  my-slack-app:
     container_name: my-slack-app
     image: tuchan17/my-slack-app:latest
     restart: always
