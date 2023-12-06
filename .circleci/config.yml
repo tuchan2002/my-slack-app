@@ -47,7 +47,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh -oStrictHostKeyChecking=no -vv 'root@178.128.217.129' "./my-slack-app/deploy-my-slack-app.sh"
+            ssh -oStrictHostKeyChecking=no -vv 'root@178.128.217.129' "./deploy-my-slack-app.sh"
 
 workflows:
   test-build-deploy:
