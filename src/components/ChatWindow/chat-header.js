@@ -3,7 +3,6 @@ import {
     Typography,
     IconButton
 } from '@mui/material';
-import VideocamIcon from '@mui/icons-material/Videocam';
 import React, { useEffect, useState } from 'react';
 import InfoIcon from '@mui/icons-material/Info';
 import { useDispatch, useSelector } from 'react-redux';
@@ -50,9 +49,6 @@ function ChatHeader() {
                     </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                    <IconButton color='secondary'>
-                        <VideocamIcon />
-                    </IconButton>
                     <IconButton color='secondary' onClick={handleClickOpenDrawer}>
                         <InfoIcon />
                     </IconButton>
