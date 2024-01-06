@@ -2,7 +2,7 @@ import { IconButton, Menu, MenuItem } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
-function MenuAdminItem({handleClickOpenRemoveMemberDialog}) {
+function MenuAdminItem({ items }) {
     const [menuAnchor, setMenuAnchor] = useState(null);
 
     const memberMenuOpen = Boolean(menuAnchor);
@@ -29,9 +29,9 @@ function MenuAdminItem({handleClickOpenRemoveMemberDialog}) {
                 open={memberMenuOpen}
                 onClose={memberMenuClose}
             >
-                <MenuItem>Make admin</MenuItem>
+                <MenuItem onClick={items.makeAdmin}>Make admin</MenuItem>
                 <MenuItem
-                    onClick={handleClickOpenRemoveMemberDialog}
+                    onClick={items.removeMember}
                 >
                     Remove Member
                 </MenuItem>
