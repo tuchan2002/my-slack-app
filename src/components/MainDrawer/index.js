@@ -22,6 +22,7 @@ import AddPeopleDialog from '../CustomDialog/add-people-dialog';
 import ConfirmLeaveDialog from '../CustomDialog/confirm-leave-dialog';
 import ChangeChannelNameDialog from '../CustomDialog/change-channel-name-dialog';
 import RemoveMemberDialog from '../CustomDialog/remove-member-dialog';
+import SetNewAdminDialog from '../CustomDialog/set-new-admin';
 import MenuAdminItem from './menu-admin-item';
 
 function MainDrawer({ openDrawer, handleCloseDrawer }) {
@@ -36,7 +37,9 @@ function MainDrawer({ openDrawer, handleCloseDrawer }) {
     const [openChangeChannelNameDialog, setOpenChangeChannelNameDialog] = useState(false);
 
     const [openRemoveMemberDialog, setOpenRemoveMemberDialog] = useState(false);
-    const [removedMember, setRemovedMember] = useState({displayName: '名前なし'});
+    const [removedMember, setRemovedMember] = useState({ displayName: '名前なし' });
+    const [openSetNewAdminDialog, setOpenSetNewAdminDialog] = useState(false);
+    const [newAdmin, setNewAdmin] = useState({ displayName: '名前なし' });
 
     const handleToggleOpenCollapseMembers = () => {
         setOpenCollapseMembers(!openCollapseMembers);
@@ -65,6 +68,11 @@ function MainDrawer({ openDrawer, handleCloseDrawer }) {
         setRemovedMember(member);
     }
 
+    function handleClickOpenSetNewAdminDialog(member) {
+        setOpenSetNewAdminDialog(true);
+        setNewAdmin(member);
+    }
+
     return (
         <>
             <ChangeChannelNameDialog
@@ -83,6 +91,11 @@ function MainDrawer({ openDrawer, handleCloseDrawer }) {
                 openDialog={openRemoveMemberDialog}
                 setOpenDialog={setOpenRemoveMemberDialog}
                 member={removedMember}
+            />
+            <SetNewAdminDialog
+                openDialog={openSetNewAdminDialog}
+                setOpenDialog={setOpenSetNewAdminDialog}
+                member={newAdmin}
             />
             <Drawer anchor='right' open={openDrawer} onClose={handleCloseDrawer}>
                 <Box sx={{ p: 2, minWidth: '450px' }}>
@@ -132,7 +145,12 @@ function MainDrawer({ openDrawer, handleCloseDrawer }) {
                                             <ListItemText primary={member.displayName} secondary={member.uid === getChannelAdmin() ? 'Admin' : ''} />
                                             {getChannelAdmin() === user.uid
                                                 && user.uid !== member.uid && (
-                                                <MenuAdminItem handleClickOpenRemoveMemberDialog={() => handleClickOpenRemoveMemberDialog(member)} />
+                                                <MenuAdminItem
+                                                    items={{
+                                                        makeAdmin: () => handleClickOpenSetNewAdminDialog(member),
+                                                        removeMember: () => handleClickOpenRemoveMemberDialog(member)
+                                                    }}
+                                                />
                                             )}
                                         </ListItemButton>
                                     </ListItem>
