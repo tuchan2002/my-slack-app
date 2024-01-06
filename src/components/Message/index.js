@@ -1,12 +1,16 @@
-import { Avatar, Box, Dialog, DialogTitle, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Typography } from '@mui/material';
+import { Avatar, Box, Dialog, DialogTitle, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Typography } from '@mui/material';
 import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { useSelector } from 'react-redux';
 import ReactionBox from './reaction-box';
 import { db } from '../../firebase/config';
 import ReactionList from './reaction-list';
 import generateReactionLabel from '../../utils/generateReactionLabel';
 import generateUsersFromReactions from '../../utils/generateUsersFromReactions';
+import DeleteMessageDialog from '../CustomDialog/delete-message-dialog';
+import { updateDocument } from '../../firebase/services';
 
 const formatDate = (seconds) => {
     const messageMoment = moment.utc(seconds * 1000);
@@ -16,9 +20,14 @@ const formatDate = (seconds) => {
     return messageMoment.format('lll');
 };
 
-function Message({messageId, content, displayName, createdAt, photoURL, imageURL }) {
+function Message({uid, messageId, content, displayName, createdAt, photoURL, imageURL, isUnsend }) {
     const [reactions, setReactions] = useState([]);
     const [isOpenDialog, setIsOpenDialog] = useState(false);
+    const [isOpenConfirmUnsendDialog, setIsOpenConfirmUnsendDialog] = useState(false);
+
+    const {
+        authReducer: { user }
+    } = useSelector((state) => state);
 
     useEffect(() => {
         const q = query(
@@ -47,6 +56,18 @@ function Message({messageId, content, displayName, createdAt, photoURL, imageURL
         setIsOpenDialog(false);
     };
 
+    const handleUnsendMessage = async () => {
+        try {
+            await updateDocument('messages', messageId, {
+                isUnsend: true
+            });
+
+            setIsOpenConfirmUnsendDialog(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <>
             <Box
@@ -73,8 +94,8 @@ function Message({messageId, content, displayName, createdAt, photoURL, imageURL
                             {formatDate(createdAt)}
                         </Typography>
                     </Box>
-                    {content && <Typography style={{marginTop: '2px'}}>{content}</Typography>}
-                    {imageURL && (
+                    {content && <Typography style={{marginTop: '2px', fontStyle: isUnsend ? 'italic' : 'normal', color: isUnsend ? '#aaa' : ''}}>{`${!isUnsend ? content : `${user.uid == uid ? 'You' : displayName} unsent a message`}`}</Typography>}
+                    {imageURL && !isUnsend && (
                         <div className='message-image'>
                             <img
                                 src={imageURL}
@@ -83,11 +104,18 @@ function Message({messageId, content, displayName, createdAt, photoURL, imageURL
                             />
                         </div>
                     )}
-                    {reactions.length > 0 && <ReactionList reactions={reactions} handleOpenReactionsDialog={handleOpenReactionsDialog} />}
+                    {reactions.length > 0 && !isUnsend && <ReactionList reactions={reactions} handleOpenReactionsDialog={handleOpenReactionsDialog} />}
                 </Box>
-                <div className='reaction-box-container'>
-                    <ReactionBox messageId={messageId} reactions={reactions} />
-                </div>
+                {!isUnsend && (
+                    <div className='reaction-box-container'>
+                        <ReactionBox messageId={messageId} reactions={reactions} />
+                        {user?.uid == uid && (
+                            <IconButton onClick={() => setIsOpenConfirmUnsendDialog(true)}>
+                                <DeleteOutlineIcon />
+                            </IconButton>
+                        )}
+                    </div>
+                )}
             </Box>
 
             <Dialog onClose={handleCloseReactionsDialog} open={isOpenDialog}>
@@ -109,6 +137,12 @@ function Message({messageId, content, displayName, createdAt, photoURL, imageURL
                     ))}
                 </List>
             </Dialog>
+
+            <DeleteMessageDialog
+                openDialog={isOpenConfirmUnsendDialog}
+                setOpenDialog={setIsOpenConfirmUnsendDialog}
+                handleUnsendMessage={handleUnsendMessage}
+            />
         </>
     );
 }

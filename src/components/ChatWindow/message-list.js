@@ -31,6 +31,8 @@ function MessageList() {
                 : (
                     <Message
                         key={message.id}
+                        uid={message.userId}
+                        isUnsend={message.isUnsend}
                         messageId={message.id}
                         content={message.content}
                         displayName={message.user?.displayName}
