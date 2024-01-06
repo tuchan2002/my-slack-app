@@ -1,2 +1,4 @@
-# Step 1: npm install
-# Step 2: npm start
+# In the root directory:
+
+- Run 'npm install' to install dependencies.
+- Then, run 'npm start' to start the application.
